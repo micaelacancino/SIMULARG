@@ -4,7 +4,7 @@ import MapaPuntos from "./MapaPuntos";
 
 function Logistica() {
   const [zona, setZona] = useState("Zona 1");
-  const [camiones, setCamiones] = useState(2);
+  const [camiones, setCamiones] = useState();
   const [clima, setClima] = useState(0);
 
   const climas = ["Normal", "Lluvia", "Tormenta"];
@@ -33,36 +33,27 @@ function Logistica() {
           </div>
 
           {/* CAMIONES */}
+  <label>Cantidad de camiones</label>
+        <input
+  type="text"
+  placeholder="Máximo 1"
+  value={camiones}
+  onChange={(e) => {
 
-          <div className="campo">
-            <label>Cantidad de camiones</label>
+    let valor = e.target.value;
 
-            <input
-              type="text"
-              placeholder="Máximo 20"
-              value={camiones}
-              onChange={(e) => {
-                let valor = e.target.value;
+    // SOLO NÚMEROS
+    valor = valor.replace(/\D/g, "");
 
-                // SOLO NÚMEROS
-                valor = valor.replace(/\D/g, "");
+    // SOLO PERMITIR 1
+    if (Number(valor) > 1) {
+      valor = 1;
+    }
 
-                // MÁXIMO 20
-                if (Number(valor) > 20) {
-                  valor = 20;
-                }
-
-                setCamiones(valor);
-              }}
-              className="input-camiones"
-            />
-
-            <span className="mensaje-input">Ingrese entre 1 y 20 camiones</span>
-
-            {/* {camiones > 15 && (
-              <span className="alerta-camiones">⚠ Muchos camiones activos</span>
-            )} */}
-          </div>
+    setCamiones(valor);
+  }}
+  className="input-camiones"
+/>
           {/* CLIMA */}
           <div className="campo">
             <label>
