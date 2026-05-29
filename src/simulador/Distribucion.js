@@ -29,16 +29,20 @@ export function Uniforme(min, max) {
 //  Mientras p > b → u = GU(), p = p * u, x = x + 1
 //  Retorna x
 // ─────────────────────────────────────────────
-export function Poisson(a) {
-  const b = Math.exp(-a); // b = e^(-a)
-  let x = 0;
-  let p = 1;
- 
-  while (p > b) {
-    const u = lehmer(); // Call GU(u) del libro
-    p = p * u;          // p = p * u
-    x = x + 1;          // x = x + 1
-  }
- 
-  return x; // cantidad de eventos (kg del día)
+export function PoissonGrande(lambda) {
+  const media = lambda;
+  const desvio = Math.sqrt(lambda);
+
+  let u1 = lehmer();
+  let u2 = lehmer();
+
+  // protección: u1 no puede ser 0 porque log(0) = -Infinity
+  if (u1 <= 0) u1 = 0.0001;
+
+  const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+
+  const resultado = Math.round(media + desvio * z);
+
+  // protección: el peso no puede ser negativo
+  return resultado > 0 ? resultado : media;
 }

@@ -1,5 +1,5 @@
 import { IniciarGenerador, lehmer } from "./Generadores.js";
-import { Poisson, Uniforme } from "./Distribucion.js";
+import { PoissonGrande, Uniforme } from "./Distribucion.js";
 IniciarGenerador(4122, 76);
 
 export async function Simulador(resultado, dias) {
@@ -71,7 +71,7 @@ export async function Simulador(resultado, dias) {
     const PCZ2 = ((KMZ2 * LCZ2) / 100) * 2248;
 
     // Peso del día
-    const P = Poisson(300); // α = 6000kg / 20 días
+    const P = PoissonGrande(300); // α = 6000kg / 20 días
 
     // peso de una notebook (entre 2 y 3 kg)
     const uPN = lehmer();
@@ -86,7 +86,7 @@ export async function Simulador(resultado, dias) {
 
     // cantidad de equipos RECIBIDOS POR DIA
    //const CE = (P / PP) / 20;
-   const CE = Math.round(P / PP); // cantidad de equipos del día
+  const CE = Math.round(P / PP); // cantidad de equipos del día
 
 
     while (i <= CE) {

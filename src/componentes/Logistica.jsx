@@ -46,7 +46,7 @@ function Logistica() {
             </div>
 
             {/* CAMIONES */}
-            <label>Cantidad de camiones</label>
+            {/* <label>Cantidad de camiones</label>
             <input
               type="text"
               placeholder="Máximo 1"
@@ -58,7 +58,7 @@ function Logistica() {
                 setCamiones(valor);
               }}
               className="input-camiones"
-            />
+            /> */}
 
             {/* CLIMA */}
             <div className="campo">
