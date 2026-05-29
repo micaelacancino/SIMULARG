@@ -15,7 +15,9 @@ function Logistica() {
   };
 
   async function handleSimular() {
-    IniciarGenerador(4122, 76);
+    // En Logistica.jsx
+const semilla = Math.floor(Math.random() * 9000) + 1000; // número de 4 dígitos aleatorio
+IniciarGenerador(semilla, 76);
     const datos = [];
     await Simulador(datos, 31);
     setResultados(datos);
