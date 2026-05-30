@@ -1,26 +1,29 @@
-import { IniciarGenerador, lehmer } from "./Generadores.js";
-import { PoissonGrande } from "./Distribucion.js";
+import { IniciarGenerador, congruencialMixto } from "./Generadores.js";
 import { proceso } from "./proceso.js";
+import { Uniforme, Poisson, Exponencial } from "./Distribucion.js";
+
+
+
 
 IniciarGenerador(4122, 76);
 
 export async function Simulador(resultado, dias) {
   let dia = 1;
 
-  while (dia < 32) {
+  while (dia < 61) {
 
     let KMZ1, KMZ2, DVZ1, DVZ2, S;
 
     // ── RECOLECCIÓN ──────────────────────────
-    const uRuta = lehmer();
+    const uRuta = congruencialMixto();
 
     if (uRuta <= 0.19) {
       // ruta adversa
-      const uKMZ1 = lehmer();
-      KMZ1 = 25.2 + 3.4 * uKMZ1;
+      const KMZ1= Uniforme(25.2, 28.4)
+      
 
-      const uKMZ2 = lehmer();
-      KMZ2 = 45.8 + 7.5 * uKMZ2;
+     
+      KMZ2 = Uniforme(45.8, 53.3);
 
       DVZ1 = (KMZ1 * 50) / 25.5;
       DVZ2 = (KMZ2 * 2.77) / 45.8;
@@ -35,27 +38,27 @@ export async function Simulador(resultado, dias) {
     }
 
     // ── COMBUSTIBLE ──────────────────────────
-    const uLCZ1 = lehmer();
-    const LCZ1 = 24 + 11 * uLCZ1;
+    const LCZ1= Uniforme(24, 35);
+   
 
-    const uLCZ2 = lehmer();
-    const LCZ2 = 24 + 11 * uLCZ2;
+    
+    const LCZ2 = Uniforme(24, 35);
 
     // ── PRECIO COMBUSTIBLE ───────────────────
     const PCZ1 = ((KMZ1 * LCZ1) / 100) * 2248;
     const PCZ2 = ((KMZ2 * LCZ2) / 100) * 2248;
 
     // ── PESO Y EQUIPOS DEL DÍA ───────────────
-    const P = PoissonGrande(300);
+    const P = Poisson(300);
 
-    const uPN = lehmer();
-    const PN = 2 + 1 * uPN;
+   
+    const PN =Uniforme (2,3);
 
-    const uPPC = lehmer();
-    const PPC = 6 + 4 * uPPC;
+    
+    const PPC =Uniforme(6,10);
 
     const PP = (PN + PPC) / 2;
-    const CE = Math.round(P / PP);
+    const CE = Math.round(P / PP)/20;
 
     // ── CONTADORES DEL DÍA ───────────────────
     const contadores = {

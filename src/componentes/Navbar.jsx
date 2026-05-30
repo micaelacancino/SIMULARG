@@ -7,7 +7,7 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("sesion");
+    localStorage.removeItem("usuario");
     setUsuarioLogueado(null);
     navigate("/");
   };

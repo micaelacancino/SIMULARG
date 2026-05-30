@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../css/tratamiento.css";
-import { IniciarGenerador, lehmer } from "../simulador/Generadores.js";
+import { IniciarGenerador, congruencialMixto } from "../simulador/Generadores.js";
 
 function Tratamiento() {
   const [tipo, setTipo] = useState("Reacondicionamiento");
@@ -78,13 +78,13 @@ function Tratamiento() {
     IniciarGenerador(4122, 76);
 
     const tiempos = {
-      N: 60 + 60 * lehmer(),
-      PC: 45 + 45 * lehmer(),
-      F: 10 + 10 * lehmer(),
-      M: 15 + 10 * lehmer(),
-      R: 8 + 5 * lehmer(),
-      CPU: 20 + 10 * lehmer(),
-      GPU: 25 + 15 * lehmer(),
+      N: 60 + 60 * congruencialMixto(),
+      PC: 45 + 45 * congruencialMixto(),
+      F: 10 + 10 * congruencialMixto(),
+      M: 15 + 10 * congruencialMixto(),
+      R: 8 + 5 * congruencialMixto(),
+      CPU: 20 + 10 * congruencialMixto(),
+      GPU: 25 + 15 * congruencialMixto(),
     };
 
     const detalle = {};
