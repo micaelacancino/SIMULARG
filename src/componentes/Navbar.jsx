@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../css/navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -7,7 +7,7 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    sessionStorage.removeItem("sesion");
+    localStorage.removeItem("usuario");
     setUsuarioLogueado(null);
     navigate("/");
   };
@@ -91,7 +91,7 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
             </li>
 
             {/* REPORTES */}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link
                 to={"/reportes"}
                 className="nav-link fw-bold"
@@ -100,7 +100,7 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
                 <i className="bi bi-bar-chart-fill me-2"></i>
                 Reportes
               </Link>
-            </li>
+            </li> */}
 
             {/* NOSOTROS */}
             <li className="nav-item">

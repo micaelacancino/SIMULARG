@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../css/tratamiento.css";
-import { IniciarGenerador, lehmer } from "../simulador/Generadores.js";
+import { IniciarGenerador, congruencialMixto } from "../simulador/Generadores.js";
 import { Simulador } from "../simulador/simulador.js";
 
 function Tratamiento() {
+  const DIAS_SIMULACION = 60;
   const [tipo, setTipo] = useState("Reacondicionamiento");
 
   // ── REACONDICIONAMIENTO ──
@@ -16,7 +17,7 @@ function Tratamiento() {
   const [resultado, setResultado] = useState(null);
 
   // ── RECICLAJE ──
-  const [simDatos, setSimDatos] = useState([]);   // 31 días
+  const [simDatos, setSimDatos] = useState([]);
   const [diaSeleccionado, setDiaSeleccionado] = useState(1);
   const [simCorrida, setSimCorrida] = useState(false);
   const [empleadosReciclaje, setEmpleadosReciclaje] = useState(1);
@@ -79,13 +80,13 @@ function Tratamiento() {
     IniciarGenerador(4122, 76);
 
     const tiempos = {
-      N:   60 + 60 * lehmer(),
-      PC:  45 + 45 * lehmer(),
-      F:   10 + 10 * lehmer(),
-      M:   15 + 10 * lehmer(),
-      R:    8 +  5 * lehmer(),
-      CPU: 20 + 10 * lehmer(),
-      GPU: 25 + 15 * lehmer(),
+      N: 60 + 60 * congruencialMixto(),
+      PC: 45 + 45 * congruencialMixto(),
+      F: 10 + 10 * congruencialMixto(),
+      M: 15 + 10 * congruencialMixto(),
+      R: 8 + 5 * congruencialMixto(),
+      CPU: 20 + 10 * congruencialMixto(),
+      GPU: 25 + 15 * congruencialMixto(),
     };
 
     const detalle = {};
@@ -124,8 +125,9 @@ function Tratamiento() {
   // ── HANDLERS RECICLAJE ──
   const handleSimularReciclaje = async () => {
     const semilla = Math.floor(Math.random() * 9000) + 1000;
+    IniciarGenerador(semilla, 76);
     const datos = [];
-    await Simulador(datos, 31);
+    await Simulador(datos, DIAS_SIMULACION);
     setSimDatos(datos);
     setDiaSeleccionado(1);
     setSimCorrida(true);
@@ -186,7 +188,7 @@ function Tratamiento() {
               <input
                 type="number"
                 value={empleadosDisponibles}
-                onChange={(e) => setEmpleadosDisponibles(Math.max(1, Number(e.target.value)))}
+                onChange={(e) => setEmpleadosDisponibles(Math.min(Math.max(1, Number(e.target.value)), 50))}
                 min="1"
                 max="50"
               />
@@ -237,7 +239,7 @@ function Tratamiento() {
           {tipo === "Reciclaje" && (
             <>
               <p style={{ fontSize: "0.9rem", color: "#555", marginTop: "8px" }}>
-                Se correrá la simulación de 31 días y podrás ver los equipos reciclados por día.
+                Se correrá la simulación de {DIAS_SIMULACION} días y podrás ver los equipos reciclados por día.
               </p>
 
               {simCorrida && (
@@ -258,7 +260,7 @@ function Tratamiento() {
                   <input
                     type="number"
                     value={empleadosReciclaje}
-                    onChange={(e) => setEmpleadosReciclaje(Math.max(1, Number(e.target.value)))}
+                    onChange={(e) => setEmpleadosReciclaje(Math.min(Math.max(1, Number(e.target.value)), 50))}
                     min="1"
                     max="50"
                   />
@@ -362,7 +364,7 @@ function Tratamiento() {
                     <p><strong>Tiempo total de reciclaje:</strong> {diaData.TR?.toFixed(1)} min ({(diaData.TR / 60).toFixed(2)} hs)</p>
                     <p><strong>Empleados necesarios:</strong> {CEMPr}</p>
                     <p><strong>Equipos procesados en la jornada:</strong> {equiposProcR} de {diaData.ER}</p>
-                    <p><strong>Equipos pendientes para el día siguiente:</strong> </p>
+                    <p><strong>Equipos pendientes para el día siguiente:</strong> {equiposPendR}</p>
                   </div>
 
                   {/* TABLA POR TIPO */}

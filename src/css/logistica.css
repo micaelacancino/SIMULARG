@@ -105,7 +105,8 @@
   color: #1E293B;
 }
 
-.campo select {
+.campo select,
+.campo input {
 
   padding: 12px;
 

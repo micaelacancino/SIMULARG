@@ -1,23 +1,31 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../css/logistica.css";
 import MapaPuntos from "./MapaPuntos";
 import { Simulador } from "../simulador/simulador.js";
 import { IniciarGenerador } from "../simulador/Generadores.js";
 
 function Logistica() {
-  const [condicion, setCondicion] = useState("Normal");
+  const DIAS_SIMULACION = 60;
+  const [diasAMostrar, setDiasAMostrar] = useState(DIAS_SIMULACION);
   const [resultados, setResultados] = useState([]);
 
   const handleResetear = () => setResultados([]);
+  const resultadosFiltrados = resultados.slice(0, diasAMostrar);
+
+  const handleDiasAMostrar = (e) => {
+    const valor = Number(e.target.value);
+    setDiasAMostrar(Math.min(Math.max(valor, 1), DIAS_SIMULACION));
+  };
 
   async function handleSimular() {
     const semilla = Math.floor(Math.random() * 9000) + 1000;
     IniciarGenerador(semilla, 76);
     const datos = [];
-    await Simulador(datos, 31, condicion);
+    await Simulador(datos, DIAS_SIMULACION);
     setResultados(datos);
   }
 
+  
   return (
     <section>
       <div className="logistica-container d-flex">
@@ -30,16 +38,19 @@ function Logistica() {
               Logística
             </h1>
 
-            {/* TIPO DE CONDICIÓN */}
+            {/* CANTIDAD DE DIAS A MOSTRAR */}
             <div className="campo">
               <label>
-                <i className="bi bi-cloud-fill"></i>
-                Tipo de condición
+                <i className="bi bi-calendar-range"></i>
+                Ingrese cantidad de días a mostrar (1-{DIAS_SIMULACION}):
               </label>
-              <select value={condicion} onChange={(e) => setCondicion(e.target.value)}>
-                <option>Normal</option>
-                <option>Adversa</option>
-              </select>
+              <input
+                type="number"
+                min="1"
+                max={DIAS_SIMULACION}
+                value={diasAMostrar}
+                onChange={handleDiasAMostrar}
+              />
             </div>
 
             {/* BOTONES */}
@@ -66,7 +77,9 @@ function Logistica() {
       {/* RESULTADOS */}
       {resultados.length > 0 && (
         <div className="resultados-container">
-          <h3 className="text-center m-4">Resultados de la simulación</h3>
+          <h3 className="text-center m-4">
+            Resultados de la simulación ({resultadosFiltrados.length} de {resultados.length} días)
+          </h3>
 
           <div className="tablas-zona">
 
@@ -85,7 +98,7 @@ function Logistica() {
                   </tr>
                 </thead>
                 <tbody>
-                  {resultados.map((r) => (
+                  {resultadosFiltrados.map((r) => (
                     <tr key={r.dia}>
                       <td>{r.dia}</td>
                       <td>{r.S}</td>
@@ -114,7 +127,7 @@ function Logistica() {
                   </tr>
                 </thead>
                 <tbody>
-                  {resultados.map((r) => (
+                  {resultadosFiltrados.map((r) => (
                     <tr key={r.dia}>
                       <td>{r.dia}</td>
                       <td>{r.S}</td>
@@ -136,3 +149,225 @@ function Logistica() {
 }
 
 export default Logistica;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+
+
