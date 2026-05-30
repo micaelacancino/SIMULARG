@@ -116,51 +116,6 @@
   background: #F8FAFC;
 }
 
-/* =========================
-   CLIMA
-========================= */
-
-.clima-container {
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 10px;
-}
-
-.slider {
-
-  width: 100%;
-
-  accent-color: #2FAE41;
-}
-
-.clima-opciones {
-
-  display: flex;
-  justify-content: space-between;
-}
-
-.clima-opciones div {
-
-  display: flex;
-  flex-direction: column;
-
-  align-items: center;
-
-  gap: 5px;
-
-  color: #64748B;
-
-  transition: 0.3s;
-}
-
-.clima-opciones .activo {
-
-  color: #2FAE41;
-
-  transform: scale(1.05);
-}
 
 /* =========================
    BOTONES
@@ -343,52 +298,33 @@
   background: #EF4444;
 }
 
-/* INPUT CAMIONES */
+.tablas-zona {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  overflow-x: auto;
+}
 
-.input-camiones {
+.tabla-wrapper {
+  flex: 1;
+  min-width: 280px;
+  max-width: 48%;  /* ← cada tabla ocupa máximo la mitad */
+}
 
+.tabla-wrapper table {
+  font-size: 0.72rem;
   width: 100%;
-
-  padding: 12px;
-
-  border-radius: 12px;
-
-  border: 1px solid #D1D5DB;
-
-  background: #F8FAFC;
-
-  font-size: 1rem;
-
-  transition: 0.3s;
+  table-layout: fixed;  /* ← columnas de ancho fijo */
 }
 
-.input-camiones:focus {
-
-  outline: none;
-
-  border-color: #2FAE41;
-
-  box-shadow: 0px 0px 0px 4px rgba(47,174,65,0.15);
+.tabla-wrapper th,
+.tabla-wrapper td {
+  padding: 3px 4px !important;
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-
-.mensaje-input {
-
-  font-size: 0.8rem;
-
-  color: #64748B;
-}
-
-.alerta-camiones {
-
-  color: #F59E0B;
-
-  font-size: 0.85rem;
-
-  font-weight: 600;
-
-  margin-top: 5px;
-}
-
 /* =========================
    RESPONSIVE
 ========================= */

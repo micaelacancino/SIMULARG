@@ -15,8 +15,9 @@ export function lehmer() {
   const k = T.toString().length; //toString cuenta la cantidad de dígitos de T
   const izquierda = parseInt(resultado.toString().substring(0, k)); //toma los primeros k dígitos del resultado
   const derecha = parseInt(resultado.toString().substring(k)); //toma los últimos k dígitos del resultado con substring y con parseInt los convierte a número
-  const n = derecha - izquierda; //resta derecha - izquierda para obtener el número pseudoaleatorio
-
+  let n = derecha - izquierda; //resta derecha - izquierda para obtener el número pseudoaleatorio
+    //PROTECCIÓN: si n es 0 o negativo, reiniciamos con un valor alternativo
+  if (n <= 0) n = ultima + 1;
   semillas.push(n); //guarda la semilla en el array
   const cantDigitos = ultima.toString().length;
   return n / Math.pow(10, cantDigitos); //devuelve el número pseudoaleatorio entre 0 y 1, dividiendo n por 10 elevado a la cantidad de dígitos de la última semilla generada

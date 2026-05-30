@@ -221,5 +221,5 @@ export function proceso(contadores) {
       }
     }
   }
-  // si u > 0.93 → se recicla
+
 }
