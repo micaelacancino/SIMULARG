@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import { BsGeoAlt, BsRecycle, BsSearch, BsTree } from "react-icons/bs";
 import "../css/nosotros.css";
 
 const VALORES = [
-  { icon:"🌱", titulo:"Sostenibilidad", desc:"Cada kg de e-waste que gestionamos es una reducción directa en la contaminación del suelo y napas de Mendoza." },
-  { icon:"🔬", titulo:"Rigor científico", desc:"Usamos modelos estocásticos reales: distribuciones uniformes, Poisson y exponencial para simular la operación." },
-  { icon:"🤝", titulo:"Economía circular", desc:"El 93% de los equipos que recibimos encuentra una segunda vida, ya sea como material reciclado o equipo reacondicionado." },
-  { icon:"📍", titulo:"Enfoque local", desc:"Operamos en Mendoza, conocemos sus zonas, sus rutas y sus condiciones climáticas adversas que afectan la logística." },
+  { Icon: BsTree, titulo:"Sostenibilidad", desc:"Cada kg de e-waste que gestionamos es una reducción directa en la contaminación del suelo y napas de Mendoza." },
+  { Icon: BsSearch, titulo:"Rigor científico", desc:"Usamos modelos estocásticos reales: distribuciones uniformes, Poisson y exponencial para simular la operación." },
+  { Icon: BsRecycle, titulo:"Economía circular", desc:"El 93% de los equipos que recibimos encuentra una segunda vida, ya sea como material reciclado o equipo reacondicionado." },
+  { Icon: BsGeoAlt, titulo:"Enfoque local", desc:"Operamos en Mendoza, conocemos sus zonas, sus rutas y sus condiciones climáticas adversas que afectan la logística." },
 ];
 
 
@@ -49,13 +50,17 @@ return (
         <div className="section-eyebrow">Lo que nos mueve</div>
         <h2 className="section-title">Principios que guían <em>cada decisión</em></h2>
         <div className="valores-grid">
-          {VALORES.map((v,i)=>(
+          {VALORES.map((v,i)=>{
+            const Icon = v.Icon;
+            return (
             <div key={i} className={`valor-card${valV?" show":""}`} style={{ transitionDelay:`${i*0.1}s` }}>
-              <span className="valor-icon">{v.icon}</span>
+              <span className="valor-icon">
+                <Icon aria-hidden="true" />
+              </span>
               <div className="valor-titulo">{v.titulo}</div>
               <div className="valor-desc">{v.desc}</div>
             </div>
-          ))}
+          )})}
         </div>
       </section>
    </>

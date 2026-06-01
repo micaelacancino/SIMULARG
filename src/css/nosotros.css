@@ -62,7 +62,18 @@ opacity:0; transform:translateY(20px); transition:opacity 0.6s 0.1s, transform 0
         }
 .valor-card.show { opacity:1; transform:translateY(0); }
 .valor-card:hover { background:rgba(45,207,143,0.05); border-color:rgba(45,207,143,0.2); }
-.valor-icon { font-size:28px; margin-bottom:18px; display:block; }
+.valor-icon {
+  width: 54px;
+  height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background: rgba(45,207,143,0.1);
+  color: #2DCF8F;
+  font-size: 28px;
+}
 .valor-titulo { font-family:'Fraunces',serif; font-size:18px; font-weight:700; color:#fff; margin-bottom:10px; }
 .valor-desc { font-size:13px; line-height:1.7; color:rgba(255,255,255,0.4); font-weight:300; }
  

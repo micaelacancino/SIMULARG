@@ -134,11 +134,22 @@
     opacity: 0; transition: opacity 0.3s;
   }
   .servicio-card:hover::before { opacity: 1; }
-  .servicio-icon { font-size: 32px; margin-bottom: 20px; display: block; }
+  .servicio-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    border-radius: 16px;
+    background: rgba(45,207,143,0.1);
+    color: #2DCF8F;
+    font-size: 30px;
+  }
   .servicio-tag {
     font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
     color: #2DCF8F; background: rgba(45,207,143,0.1); padding: 4px 10px;
-    border-radius: 10px; display: inline-block; margin-bottom: 16px;
+    border-radius: 10px; display: inline-block; margin-bottom: 18px;
   }
   .servicio-titulo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 12px; }
   .servicio-desc { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.45); font-weight: 300; }
@@ -156,8 +167,9 @@
   .paso.show { opacity: 1; transform: translateX(0); }
   .paso:last-child { border-bottom: none; }
   .paso-num {
-    font-family: 'Fraunces', serif; font-size: 11px; font-weight: 700;
-    color: #2DCF8F; min-width: 28px; padding-top: 3px;
+    font-family: 'Fraunces', serif; font-size: 34px; font-weight: 900; 
+    margin-left: 20px;
+    color: #2DCF8F; min-width: 72px; line-height: 1;
   }
   .paso-titulo { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 6px; }
   .paso-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; font-weight: 300; }
@@ -178,16 +190,170 @@
   .footer-links a:hover { color: #2DCF8F; }
   
   
+  @media (max-width: 1100px) {
+    .hero {
+      min-height: 82vh;
+      padding: 100px 36px 72px;
+    }
+
+    .hero-circle {
+      right: -260px;
+      width: 520px;
+      height: 520px;
+    }
+
+    .stats,
+    .servicios,
+    .proceso {
+      padding-left: 36px;
+      padding-right: 36px;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .proceso-inner {
+      grid-template-columns: 1fr;
+      gap: 44px;
+    }
+  }
+
   @media (max-width: 768px) {
     .nav { padding: 0 20px; }
     .nav-links, .nav-cta { display: none; }
-    .hero { padding: 100px 20px 60px; }
-    .stats { padding: 60px 20px; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .servicios, .proceso, .cta-section { padding: 70px 20px; }
-    .servicios-grid { grid-template-columns: 1fr; }
-    .proceso-inner { grid-template-columns: 1fr; gap: 40px; }
+
+    .hero {
+      min-height: auto;
+      padding: 84px 20px 56px;
+    }
+
+    .hero-circle {
+      right: -330px;
+      width: 460px;
+      height: 460px;
+    }
+
+    .hero-tag {
+      font-size: 10px;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(40px, 12vw, 64px);
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .stats {
+      padding: 52px 20px;
+    }
+
+    .stat-item {
+      padding: 28px 22px;
+    }
+
+    .stat-num {
+      font-size: 40px;
+    }
+
+    .servicios,
+    .proceso,
+    .cta-section {
+      padding: 64px 20px;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 9vw, 44px);
+      margin-bottom: 36px;
+    }
+
+    .servicios-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .servicio-card {
+      padding: 32px 26px;
+    }
+
+    .proceso-inner {
+      gap: 28px;
+    }
+
+    .paso {
+      gap: 16px;
+      padding: 22px 0;
+    }
+
+    .paso-num {
+      font-size: 30px;
+      min-width: 58px;
+    }
+
+    .paso-titulo {
+      font-size: 16px;
+    }
+
+    .paso-desc {
+      font-size: 14px;
+    }
+
     .footer { flex-direction: column; gap: 20px; padding: 20px 20px; text-align: center; }
+  }
+
+  @media (max-width: 520px) {
+    .hero {
+      padding: 72px 16px 48px;
+    }
+
+    .hero-title {
+      font-size: clamp(36px, 15vw, 52px);
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-item {
+      padding: 24px 20px;
+    }
+
+    .servicios,
+    .proceso {
+      padding: 56px 16px;
+    }
+
+    .servicio-card {
+      padding: 28px 22px;
+    }
+
+    .paso {
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .paso-num {
+      font-size: 26px;
+      min-width: 48px;
+    }
   }
 
 

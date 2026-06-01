@@ -14,7 +14,7 @@ export async function Simulador(resultado, dias = 60) {
 
     let KMZ1, KMZ2, DVZ1, DVZ2, S;
 
-    // ── RECOLECCIÓN ──────────────────────────
+    // RECOLECCIÓN 
     const uRuta = congruencialMixto();
 
     if (uRuta <= 0.19) {
@@ -23,7 +23,7 @@ export async function Simulador(resultado, dias = 60) {
       KMZ2 = Uniforme(45.8, 53.3);
 
       DVZ1 = (KMZ1 * 50) / 25.5;
-      DVZ2 = (KMZ2 * 2.77) / 45.8;
+      DVZ2 = (KMZ2 * 77) / 45.8; 
       S = "Adversa";
     } else {
       // ruta normal
@@ -55,7 +55,7 @@ export async function Simulador(resultado, dias = 60) {
     const PPC =Uniforme(6,10);
 
     const PP = (PN + PPC) / 2;
-    const CE = Math.round(P / PP)/20;
+    const CE = Math.max(0, Math.round((P / PP) / 20));
 
     // ── CONTADORES DEL DÍA ───────────────────
     const contadores = {

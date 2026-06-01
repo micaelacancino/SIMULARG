@@ -1,106 +1,159 @@
 import { useState } from "react";
+import { BsClipboardData } from "react-icons/bs";
 import "../css/tratamiento.css";
 import { IniciarGenerador, congruencialMixto } from "../simulador/Generadores.js";
-import { Simulador } from "../simulador/simulador.js";
 
 function Tratamiento() {
-  const DIAS_SIMULACION = 60;
-  const [tipo, setTipo] = useState("Reacondicionamiento");
-
-  // ── REACONDICIONAMIENTO ──
-  const [totalRecibidos, setTotalRecibidos] = useState(0);
-  const [empleadosDisponibles, setEmpleadosDisponibles] = useState(1);
+  const PROB_REACONDICIONAMIENTO = 0.02;
+  const [totalRecibidos, setTotalRecibidos] = useState("");
+  const [empleadosDisponibles, setEmpleadosDisponibles] = useState("");
   const [equipos, setEquipos] = useState({
-    N: 0, PC: 0, F: 0, M: 0, R: 0, CPU: 0, GPU: 0,
+    N: "", PC: "", F: "", M: "", R: "", CPU: "", GPU: "",
   });
   const [error, setError] = useState("");
   const [resultado, setResultado] = useState(null);
-
-  // ── RECICLAJE ──
-  const [simDatos, setSimDatos] = useState([]);
-  const [diaSeleccionado, setDiaSeleccionado] = useState(1);
-  const [simCorrida, setSimCorrida] = useState(false);
-  const [empleadosReciclaje, setEmpleadosReciclaje] = useState(1);
+  const [simulando, setSimulando] = useState(false);
 
   const labels = {
     N: "Notebooks", PC: "PCs completas", F: "Fuentes",
     M: "Motherboards", R: "Memorias RAM", CPU: "Procesadores", GPU: "Tarjetas gráficas"
   };
 
-  // labels para contadores de reciclaje por tipo
-  const labelsReciclaje = {
-    CNR: "Notebooks recicladas",
-    CPCR: "PCs recicladas",
-    CFR: "Fuentes recicladas",
-    CMR: "Motherboards recicladas",
-    CRR: "RAMs recicladas",
-    CCPUR: "Procesadores reciclados",
-    CGPUR: "GPUs recicladas",
-  };
+  const sumaActual = Object.values(equipos).reduce((a, b) => a + Number(b || 0), 0);
 
-  const sumaActual = Object.values(equipos).reduce((a, b) => a + b, 0);
-
-  // ── HANDLERS REACONDICIONAMIENTO ──
   const handleTotalChange = (e) => {
-    const val = Math.min(Number(e.target.value), 150);
-    setTotalRecibidos(val);
+    const { value } = e.target;
+
+    if (value === "" || /^\d+$/.test(value)) {
+      setTotalRecibidos(value);
+    }
+
     setError("");
     setResultado(null);
-    setEquipos({ N: 0, PC: 0, F: 0, M: 0, R: 0, CPU: 0, GPU: 0 });
+    setEquipos({ N: "", PC: "", F: "", M: "", R: "", CPU: "", GPU: "" });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let val = Math.min(Number(value), 100);
-    if (val < 0) val = 0;
-    const nuevasSuma = sumaActual - equipos[name] + val;
-    if (nuevasSuma > totalRecibidos) {
-      setError(`La suma no puede superar ${totalRecibidos} equipos recibidos hoy.`);
+    if (value !== "" && !/^\d+$/.test(value)) {
       return;
     }
+
+    const val = Number(value || 0);
+    const total = Number(totalRecibidos);
+    const nuevaSuma = sumaActual - Number(equipos[name] || 0) + val;
+
+    if (nuevaSuma > total) {
+      setError(`La suma no puede superar ${total} equipos recibidos hoy.`);
+      return;
+    }
+
     setError("");
-    setEquipos((prev) => ({ ...prev, [name]: val }));
+    setEquipos((prev) => ({ ...prev, [name]: value }));
   };
 
-  const calcular = () => {
-    if (totalRecibidos === 0) {
+  const handleEmpleadosChange = (e) => {
+    const { value } = e.target;
+
+    if (value === "" || /^\d+$/.test(value)) {
+      setEmpleadosDisponibles(value);
+    }
+
+    setError("");
+  };
+
+  const ejecutarSimulacion = () => {
+    const total = Number(totalRecibidos);
+
+    if (totalRecibidos === "") {
       setError("Ingresá la cantidad de equipos recibidos hoy.");
+      return;
+    }
+    if (total < 1) {
+      setError("La cantidad de equipos recibidos debe ser al menos 1.");
+      return;
+    }
+    if (total > 250) {
+      setError("La cantidad de equipos recibidos no puede superar 250.");
       return;
     }
     if (sumaActual === 0) {
       setError("Ingresá al menos un equipo para calcular.");
       return;
     }
-    if (sumaActual > totalRecibidos) {
-      setError(`La suma (${sumaActual}) supera el total recibido (${totalRecibidos}).`);
+    if (empleadosDisponibles === "") {
+      setError("Ingresá la cantidad de empleados disponibles.");
+      return;
+    }
+    if (Number(empleadosDisponibles) < 1) {
+      setError("La cantidad de empleados disponibles debe ser al menos 1.");
+      return;
+    }
+    if (Number(empleadosDisponibles) > 150) {
+      setError("La cantidad de empleados disponibles no puede superar 150.");
+      return;
+    }
+    if (sumaActual > total) {
+      setError(`La suma (${sumaActual}) supera el total recibido (${total}).`);
       return;
     }
 
     setError("");
     IniciarGenerador(4122, 76);
 
-    const tiempos = {
-      N: 60 + 60 * congruencialMixto(),
-      PC: 45 + 45 * congruencialMixto(),
-      F: 10 + 10 * congruencialMixto(),
-      M: 15 + 10 * congruencialMixto(),
-      R: 8 + 5 * congruencialMixto(),
-      CPU: 20 + 10 * congruencialMixto(),
-      GPU: 25 + 15 * congruencialMixto(),
+    const tiemposPorDestino = {
+      N: { reacondicionamiento: [60, 120], reciclaje: [20, 30] },
+      PC: { reacondicionamiento: [45, 90], reciclaje: [20, 40] },
+      F: { reacondicionamiento: [10, 20], reciclaje: [7, 11] },
+      M: { reacondicionamiento: [15, 30], reciclaje: [5, 10] },
+      R: { reacondicionamiento: [5, 10], reciclaje: [1, 3] },
+      CPU: { reacondicionamiento: [10, 20], reciclaje: [3, 6] },
+      GPU: { reacondicionamiento: [15, 30], reciclaje: [3, 8] },
     };
 
     const detalle = {};
     Object.keys(equipos).forEach((key) => {
+      let reciclaje = 0;
+      let reacondicionamiento = 0;
+      let tiempoReciclaje = 0;
+      let tiempoReacondicionamiento = 0;
+
+      const cantidad = Number(equipos[key] || 0);
+
+      for (let i = 0; i < cantidad; i++) {
+        const destino = congruencialMixto() <= PROB_REACONDICIONAMIENTO ? "reacondicionamiento" : "reciclaje";
+        const [min, max] = tiemposPorDestino[key][destino];
+        const tiempo = min + (max - min) * congruencialMixto();
+
+        if (destino === "reacondicionamiento") {
+          reacondicionamiento++;
+          tiempoReacondicionamiento += tiempo;
+        } else {
+          reciclaje++;
+          tiempoReciclaje += tiempo;
+        }
+      }
+
+      const tiempoTotal = tiempoReciclaje + tiempoReacondicionamiento;
+
       detalle[key] = {
-        cantidad: equipos[key],
-        tiempoPorUnidad: tiempos[key],
-        tiempoTotal: equipos[key] * tiempos[key],
+        cantidad,
+        reciclaje,
+        reacondicionamiento,
+        tiempoReciclaje,
+        tiempoReacondicionamiento,
+        tiempoPromedioReciclaje: reciclaje > 0 ? tiempoReciclaje / reciclaje : 0,
+        tiempoPromedioReacondicionamiento:
+          reacondicionamiento > 0 ? tiempoReacondicionamiento / reacondicionamiento : 0,
+        tiempoPorUnidad: cantidad > 0 ? tiempoTotal / cantidad : 0,
+        tiempoTotal,
       };
     });
 
     const TT   = Object.values(detalle).reduce((a, b) => a + b.tiempoTotal, 0);
     const HH   = TT / 60;
-    const jornadaMin = empleadosDisponibles * 8 * 60;
+    const empleados = Number(empleadosDisponibles);
+    const jornadaMin = empleados * 8 * 60;
     const CEMP = Math.ceil(HH / 8);
 
     const minPorEquipo = TT / sumaActual;
@@ -110,40 +163,29 @@ function Tratamiento() {
     setResultado({
       detalle, TT, HH, CEMP,
       equiposProcesados, equiposPendientes,
-      empleadosDisponibles,
+      empleadosDisponibles: empleados,
     });
+  };
+
+  const handleSimular = () => {
+    setSimulando(true);
+    setResultado(null);
+
+    setTimeout(() => {
+      ejecutarSimulacion();
+      setSimulando(false);
+    }, 450);
   };
 
   const handleResetear = () => {
     setResultado(null);
+    setSimulando(false);
     setError("");
-    setEquipos({ N: 0, PC: 0, F: 0, M: 0, R: 0, CPU: 0, GPU: 0 });
-    setTotalRecibidos(0);
-    setEmpleadosDisponibles(1);
+    setEquipos({ N: "", PC: "", F: "", M: "", R: "", CPU: "", GPU: "" });
+    setTotalRecibidos("");
+    setEmpleadosDisponibles("");
   };
 
-  // ── HANDLERS RECICLAJE ──
-  const handleSimularReciclaje = async () => {
-    const semilla = Math.floor(Math.random() * 9000) + 1000;
-    IniciarGenerador(semilla, 76);
-    const datos = [];
-    await Simulador(datos, DIAS_SIMULACION);
-    setSimDatos(datos);
-    setDiaSeleccionado(1);
-    setSimCorrida(true);
-  };
-
-  const handleResetearReciclaje = () => {
-    setSimDatos([]);
-    setSimCorrida(false);
-    setDiaSeleccionado(1);
-    setEmpleadosReciclaje(1);
-  };
-
-  // día seleccionado de la simulación
-  const diaData = simDatos.find((d) => d.dia === diaSeleccionado);
-
-  // comparación empleados (reacondicionamiento)
   const estadoEmpleados = resultado
     ? resultado.empleadosDisponibles >= resultado.CEMP
       ? { msg: `✅ La cantidad de empleados es suficiente (necesarios: ${resultado.CEMP}, disponibles: ${resultado.empleadosDisponibles}).`, color: "#16a34a" }
@@ -159,159 +201,169 @@ function Tratamiento() {
         {/* ── FORMULARIO ── */}
         <div className="formulario">
 
-          <label>Tipo de tratamiento</label>
-          <select
-            value={tipo}
-            onChange={(e) => {
-              setTipo(e.target.value);
-              setError("");
-              setResultado(null);
-            }}
-          >
-            <option>Reacondicionamiento</option>
-            <option>Reciclaje</option>
-          </select>
-
-          {/* ── PANEL REACONDICIONAMIENTO ── */}
-          {tipo === "Reacondicionamiento" && (
-            <>
+          <div className="campos-principales">
+            <div>
               <label>Equipos recibidos hoy (total)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={totalRecibidos}
                 onChange={handleTotalChange}
-                min="0"
-                max="150"
+                min="1"
+                max="250"
+                placeholder="Ej: 120"
               />
+            </div>
 
+            <div>
               <label>Empleados disponibles</label>
               <input
-                type="number"
+                type="text"
+                inputMode="numeric"
                 value={empleadosDisponibles}
-                onChange={(e) => setEmpleadosDisponibles(Math.min(Math.max(1, Number(e.target.value)), 50))}
+                onChange={handleEmpleadosChange}
                 min="1"
-                max="50"
+                max="150"
+                placeholder="Ej: 8"
               />
+            </div>
+          </div>
 
-              <h3>Clasificación de equipos</h3>
-              <p className="texto-suma">
-                Ingresados: <strong>{sumaActual}</strong> / {totalRecibidos}
-              </p>
+          <div className="clasificacion-header">
+            <h3>Clasificación de equipos</h3>
+            <p className="texto-suma">
+              Ingresados: <strong>{sumaActual}</strong> / {totalRecibidos}
+            </p>
+          </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px" }}>
-                {Object.keys(equipos).map((key) => (
-                  <div key={key}>
-                    <label style={{ fontSize: "0.85rem" }}>{labels[key]}</label>
-                    <input
-                      type="number"
-                      name={key}
-                      value={equipos[key]}
-                      onChange={handleChange}
-                      min="0"
-                      max="100"
-                      disabled={totalRecibidos === 0}
-                      style={{ width: "100%" }}
-                    />
-                  </div>
-                ))}
+          <div className="equipos-grid">
+            {Object.keys(equipos).map((key) => (
+              <div key={key}>
+                <label>{labels[key]}</label>
+                <input
+                  type="number"
+                  name={key}
+                  value={equipos[key]}
+                  onChange={handleChange}
+                  min="0"
+                  disabled={totalRecibidos === ""}
+                />
               </div>
+            ))}
+          </div>
 
-              {error && <p style={{ color: "red", marginTop: "8px" }}>{error}</p>}
+          {error && <p className="texto-error">{error}</p>}
 
-              <div className="botones" style={{ marginTop: "12px" }}>
-                <button
-                  className="btn-simular"
-                  onClick={calcular}
-                  disabled={totalRecibidos === 0 || sumaActual === 0}
-                >
-                  Calcular
-                </button>
-                {resultado && (
-                  <button className="btn-salir" onClick={handleResetear}>
-                    Resetear
-                  </button>
-                )}
-              </div>
-            </>
-          )}
-
-          {/* ── PANEL RECICLAJE ── */}
-          {tipo === "Reciclaje" && (
-            <>
-              <p style={{ fontSize: "0.9rem", color: "#555", marginTop: "8px" }}>
-                Se correrá la simulación de {DIAS_SIMULACION} días y podrás ver los equipos reciclados por día.
-              </p>
-
-              {simCorrida && (
+          <div className="botones">
+            <button
+              className="btn-simular"
+              onClick={handleSimular}
+              disabled={simulando}
+            >
+              {simulando ? (
                 <>
-                  <label>Seleccionar día</label>
-                  <select
-                    value={diaSeleccionado}
-                    onChange={(e) => setDiaSeleccionado(Number(e.target.value))}
-                  >
-                    {simDatos.map((d) => (
-                      <option key={d.dia} value={d.dia}>
-                        Día {d.dia} — {d.S}
-                      </option>
-                    ))}
-                  </select>
-
-                  <label>Empleados disponibles</label>
-                  <input
-                    type="number"
-                    value={empleadosReciclaje}
-                    onChange={(e) => setEmpleadosReciclaje(Math.min(Math.max(1, Number(e.target.value)), 50))}
-                    min="1"
-                    max="50"
-                  />
+                  <span className="spinner-simular" aria-hidden="true"></span>
+                  Simulando
                 </>
+              ) : (
+                "Simular"
               )}
+            </button>
+            {resultado && (
+              <button className="btn-salir" onClick={handleResetear}>
+                Resetear
+              </button>
+            )}
+          </div>
 
-              <div className="botones" style={{ marginTop: "12px" }}>
-                <button className="btn-simular" onClick={handleSimularReciclaje}>
-                  {simCorrida ? "Volver a simular" : "Simular"}
-                </button>
-                {simCorrida && (
-                  <button className="btn-salir" onClick={handleResetearReciclaje}>
-                    Resetear
-                  </button>
-                )}
-              </div>
-            </>
-          )}
         </div>
 
         {/* ── RESULTADOS ── */}
         <div className="resultados">
 
-          {/* RESULTADOS REACONDICIONAMIENTO */}
-          {tipo === "Reacondicionamiento" && (
-            resultado ? (
-              <>
-                <h2>Resultados — Reacondicionamiento</h2>
+          {simulando ? (
+            <div className="estado-vacio-resultados">
+              <div className="loader-simulacion" aria-hidden="true"></div>
+              <h2>Simulando tratamiento</h2>
+              <p>Procesando clasificación, destinos y tiempos estimados.</p>
+            </div>
+          ) : resultado ? (
+            <>
+              <h2>Resultados de la simulación</h2>
 
-                <table className="table table-striped table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Equipo</th>
-                      <th>Cantidad</th>
-                      <th>Tiempo por unidad (min)</th>
-                      <th>Tiempo total (min)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.keys(resultado.detalle).map((key) =>
-                      resultado.detalle[key].cantidad > 0 && (
-                        <tr key={key}>
-                          <td>{labels[key]}</td>
-                          <td>{resultado.detalle[key].cantidad}</td>
-                          <td>{resultado.detalle[key].tiempoPorUnidad.toFixed(1)}</td>
-                          <td>{resultado.detalle[key].tiempoTotal.toFixed(1)}</td>
+                <div className="tabla-panel">
+                  <div className="tabla-panel-header">
+                    <h3>Equipos reciclados</h3>
+                  </div>
+                  <div className="tabla-scroll">
+                    <table className="tabla-datos">
+                      <thead>
+                        <tr>
+                          <th>Equipo</th>
+                          <th>Cantidad</th>
+                          <th>Tiempo promedio (min)</th>
+                          <th>Tiempo total (min)</th>
                         </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
+                      </thead>
+                      <tbody>
+                        {Object.keys(resultado.detalle).map((key) =>
+                          resultado.detalle[key].reciclaje > 0 && (
+                            <tr key={key}>
+                              <td>{labels[key]}</td>
+                              <td>{resultado.detalle[key].reciclaje}</td>
+                              <td>{resultado.detalle[key].tiempoPromedioReciclaje.toFixed(1)}</td>
+                              <td>{resultado.detalle[key].tiempoReciclaje.toFixed(1)}</td>
+                            </tr>
+                          )
+                        )}
+                        {Object.keys(resultado.detalle).every((key) => resultado.detalle[key].reciclaje === 0) && (
+                          <tr>
+                            <td colSpan={4} className="tabla-vacia">
+                              No hubo equipos reciclados
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="tabla-panel">
+                  <div className="tabla-panel-header">
+                    <h3>Equipos reacondicionados</h3>
+                  </div>
+                  <div className="tabla-scroll">
+                    <table className="tabla-datos">
+                      <thead>
+                        <tr>
+                          <th>Equipo</th>
+                          <th>Cantidad</th>
+                          <th>Tiempo promedio (min)</th>
+                          <th>Tiempo total (min)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.keys(resultado.detalle).map((key) =>
+                          resultado.detalle[key].reacondicionamiento > 0 && (
+                            <tr key={key}>
+                              <td>{labels[key]}</td>
+                              <td>{resultado.detalle[key].reacondicionamiento}</td>
+                              <td>{resultado.detalle[key].tiempoPromedioReacondicionamiento.toFixed(1)}</td>
+                              <td>{resultado.detalle[key].tiempoReacondicionamiento.toFixed(1)}</td>
+                            </tr>
+                          )
+                        )}
+                        {Object.keys(resultado.detalle).every((key) => resultado.detalle[key].reacondicionamiento === 0) && (
+                          <tr>
+                            <td colSpan={4} className="tabla-vacia">
+                              No hubo equipos reacondicionados
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
                 <div className="resultado-card mt-3">
                   <p><strong>Tiempo total para procesar todos:</strong> {resultado.TT.toFixed(1)} min ({resultado.HH.toFixed(2)} hs)</p>
@@ -331,91 +383,20 @@ function Tratamiento() {
                 }}>
                   {estadoEmpleados.msg}
                 </div>
-              </>
-            ) : (
-              <h2>Ingresá los equipos y calculá</h2>
-            )
-          )}
-
-          {/* RESULTADOS RECICLAJE */}
-          {tipo === "Reciclaje" && (
-            !simCorrida ? (
-              <h2>Presioná Simular para ver los resultados de reciclaje</h2>
-            ) : diaData ? (() => {
-              // ── CÁLCULO DE JORNADA RECICLAJE ──
-              const jornadaMinR = empleadosReciclaje * 8 * 60;
-              const CEMPr = Math.ceil(diaData.TR / 60 / 8);
-              const equiposProcR = diaData.ER > 0
-                ? Math.min(diaData.ER, Math.floor(jornadaMinR / (diaData.TR / diaData.ER)))
-                : 0;
-              const equiposPendR = diaData.ER - equiposProcR;
-              const estadoEmpR = empleadosReciclaje >= CEMPr
-                ? { msg: `✅ La cantidad de empleados es suficiente (necesarios: ${CEMPr}, disponibles: ${empleadosReciclaje}).`, color: "#16a34a" }
-                : { msg: `⚠️ Se necesitan ${CEMPr} empleados pero solo hay ${empleadosReciclaje} disponibles. Faltan ${CEMPr - empleadosReciclaje}.`, color: "#dc2626" };
-
-              return (
-                <>
-                  <h2>Reciclaje — Día {diaData.dia} ({diaData.S})</h2>
-
-                  {/* RESUMEN DEL DÍA */}
-                  <div className="resultado-card mb-3">
-                    <p><strong>Equipos recibidos estimados:</strong> {diaData.CE}</p>
-                    <p><strong>Total equipos reciclados:</strong> {diaData.ER}</p>
-                    <p><strong>Tiempo total de reciclaje:</strong> {diaData.TR?.toFixed(1)} min ({(diaData.TR / 60).toFixed(2)} hs)</p>
-                    <p><strong>Empleados necesarios:</strong> {CEMPr}</p>
-                    <p><strong>Equipos procesados en la jornada:</strong> {equiposProcR} de {diaData.ER}</p>
-                    <p><strong>Equipos pendientes para el día siguiente:</strong> {equiposPendR}</p>
-                  </div>
-
-                  {/* TABLA POR TIPO */}
-                  <table className="table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Tipo de equipo</th>
-                        <th>Cantidad reciclada</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(labelsReciclaje).map(([key, label]) =>
-                        diaData[key] > 0 && (
-                          <tr key={key}>
-                            <td>{label}</td>
-                            <td>{diaData[key]}</td>
-                          </tr>
-                        )
-                      )}
-                      {Object.keys(labelsReciclaje).every((k) => !diaData[k] || diaData[k] === 0) && (
-                        <tr>
-                          <td colSpan={2} style={{ textAlign: "center", color: "#888" }}>
-                            No se reciclaron equipos este día
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-
-                  {/* COMPARACIÓN EMPLEADOS */}
-                  <div style={{
-                    marginTop: "12px",
-                    padding: "14px 18px",
-                    borderRadius: "12px",
-                    background: estadoEmpR.color === "#16a34a" ? "#f0fdf4" : "#fef2f2",
-                    borderLeft: `4px solid ${estadoEmpR.color}`,
-                    color: estadoEmpR.color,
-                    fontWeight: "600",
-                  }}>
-                    {estadoEmpR.msg}
-                  </div>
-
-                  {/* COMPARACIÓN CON REACONDICIONAMIENTO */}
-                  <div className="resultado-card mt-3">
-                    <p><strong>Equipos reacondicionados ese día:</strong> {diaData.ERA}</p>
-                    <p><strong>Tiempo de reacondicionamiento:</strong> {diaData.TRA?.toFixed(1)} min</p>
-                    <p><strong>Tiempo total del día (ambos procesos):</strong> {diaData.TT?.toFixed(1)} min ({diaData.HH?.toFixed(2)} hs)</p>
-                  </div>
-                </>
-              );
-            })() : null
+            </>
+          ) : (
+            <div className="estado-vacio-resultados">
+              <div className="estado-vacio-icono">
+                <BsClipboardData aria-hidden="true" />
+              </div>
+              <h2>Resultados de la simulación</h2>
+              <p>Completá los equipos recibidos y presioná Calcular.</p>
+              <ul>
+                <li>Equipos reciclados</li>
+                <li>Equipos reacondicionados</li>
+                <li>Tiempos y empleados necesarios</li>
+              </ul>
+            </div>
           )}
 
         </div>

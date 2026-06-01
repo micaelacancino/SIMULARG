@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { BsGraphUpArrow, BsRecycle, BsTruck, BsWrenchAdjustable } from "react-icons/bs";
 import "../css/home.css";
 
 const STATS = [
@@ -10,25 +11,25 @@ const STATS = [
 
 const SERVICIOS = [
   {
-    icon: "♻",
+    Icon: BsRecycle,
     titulo: "Reciclaje de e-waste",
     desc: "Desmontamos y clasificamos notebooks, PCs y componentes electrónicos para recuperar materiales valiosos y reducir el impacto ambiental.",
     tag: "Proceso automatizado",
   },
   {
-    icon: "🔧",
+    Icon: BsWrenchAdjustable,
     titulo: "Reacondicionamiento",
     desc: "El 1% de los equipos recibidos tienen vida útil restante. Los reacondicionamos y reintroducimos al mercado a precio accesible.",
     tag: "Economía circular",
   },
   {
-    icon: "🚛",
+    Icon: BsTruck,
     titulo: "Recolección urbana",
     desc: "Operamos rutas de recolección en Guaymallén y Maipú/Godoy Cruz, con logística adaptada a condiciones climáticas adversas.",
     tag: "Zona 1 y Zona 2",
   },
   {
-    icon: "📊",
+    Icon: BsGraphUpArrow,
     titulo: "Simulación operativa",
     desc: "Usamos modelos de probabilidad (distribuciones uniformes, Poisson, exponencial) para optimizar recursos y proyectar demanda.",
     tag: "Modelos estocásticos",
@@ -369,14 +370,18 @@ export default function Home() {
         <div className="section-eyebrow">Lo que hacemos</div>
         <h2 className="section-title">Soluciones para el <em>ciclo completo</em></h2>
         <div className="servicios-grid">
-          {SERVICIOS.map((s,i)=>(
+          {SERVICIOS.map((s,i)=>{
+            const Icon = s.Icon;
+            return (
             <div key={i} className={`servicio-card${servVisible?" show":""}`} style={{ transitionDelay:`${i*0.12}s` }}>
-              <span className="servicio-icon">{s.icon}</span>
+              <span className="servicio-icon">
+                <Icon aria-hidden="true" />
+              </span>
               <span className="servicio-tag">{s.tag}</span>
               <div className="servicio-titulo">{s.titulo}</div>
               <div className="servicio-desc">{s.desc}</div>
             </div>
-          ))}
+          )})}
         </div>
       </section>
 

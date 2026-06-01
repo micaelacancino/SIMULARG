@@ -16,10 +16,6 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
     setDesplegarNavbar((prev) => !prev);
   };
 
-  const handleAdmin = () => {
-    navigate("/admin");
-  };
-
   const closeNavbar = () => {
     setDesplegarNavbar(false);
   };
@@ -120,7 +116,6 @@ function NavBar({ usuarioLogueado, setUsuarioLogueado }) {
                 <button
                   type="button"
                   className="btn btn-admin"
-                  onClick={handleAdmin}
                 >
                   Admin
                 </button>

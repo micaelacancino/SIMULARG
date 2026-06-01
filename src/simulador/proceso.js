@@ -2,6 +2,8 @@
 import { congruencialMixto } from "./Generadores.js";
 import { Uniforme } from "./Distribucion.js";
 
+const PROB_REACONDICIONAMIENTO = 0.02;
+
 export function proceso(contadores) {
  
   const u = congruencialMixto();
@@ -14,7 +16,7 @@ export function proceso(contadores) {
       // ── NOTEBOOK (45%) ──────────────────────────
       contadores.N++;
       const u9 = congruencialMixto();
-      if (u9 <= 0.01) {
+      if (u9 <= PROB_REACONDICIONAMIENTO) {
         // reacondicionamiento
         contadores.CNRA++;
         contadores.ERA++;
@@ -24,7 +26,7 @@ export function proceso(contadores) {
         // reciclaje
         contadores.CNR++;
         contadores.ER++;
-        const T = Uniforme(20, 30); // tiempo de reciclaje
+        const T = Uniforme(30, 60); // tiempo de reciclaje
         contadores.TR += T;
       }
  
@@ -32,17 +34,17 @@ export function proceso(contadores) {
       // ── PC COMPLETA (35%) ───────────────────────
       contadores.PC++;
       const u6 = congruencialMixto();
-      if (u6 <= 0.01) {
+      if (u6 <= PROB_REACONDICIONAMIENTO) {
         // reacondicionamiento
         contadores.CPCRA++;
         contadores.ERA++;
-        const T = Uniforme(45, 90); // tiempo de reacondicionamiento
+        const T = Uniforme(60, 90); // tiempo de reacondicionamiento
         contadores.TRA += T;
       } else {
         // reciclaje
         contadores.CPCR++;
         contadores.ER++;
-        const T = Uniforme(20, 40); // tiempo de reciclaje
+        const T = Uniforme(30, 60); // tiempo de reciclaje
         contadores.TR += T;
       }
  
@@ -54,15 +56,15 @@ export function proceso(contadores) {
         // FUENTE
         contadores.F++;
         const u3 = congruencialMixto();
-        if (u3 <= 0.01) {
+        if (u3 <= PROB_REACONDICIONAMIENTO) {
           contadores.CFRA++;
           contadores.ERA++;
-          const T = Uniforme(10, 20);
+          const T = Uniforme(15, 25);
           contadores.TRA += T;
         } else {
           contadores.CFR++;
           contadores.ER++;
-          const T = Uniforme(7, 11);
+          const T = Uniforme(10, 20);
           contadores.TR += T;
         }
  
@@ -70,7 +72,7 @@ export function proceso(contadores) {
         // MOTHERBOARD
         contadores.M++;
         const u3 = congruencialMixto();
-        if (u3 <= 0.01) {
+        if (u3 <= PROB_REACONDICIONAMIENTO) {
           contadores.CMRA++;
           contadores.ERA++;
           const T = Uniforme(15, 30);
@@ -78,7 +80,7 @@ export function proceso(contadores) {
         } else {
           contadores.CMR++;
           contadores.ER++;
-          const T = Uniforme(5, 10);
+          const T = Uniforme(15, 25);
           contadores.TR += T;
         }
  
@@ -86,15 +88,15 @@ export function proceso(contadores) {
         // RAM
         contadores.R++;
         const u3 = congruencialMixto();
-        if (u3 <= 0.01) {
+        if (u3 <= PROB_REACONDICIONAMIENTO) {
           contadores.CRRA++;
           contadores.ERA++;
-          const T = Uniforme(5, 10);
+          const T = Uniforme(6, 10);
           contadores.TRA += T;
         } else {
           contadores.CRR++;
           contadores.ER++;
-          const T = Uniforme(1, 3);
+          const T = Uniforme(5, 12);
           contadores.TR += T;
         }
  
@@ -102,7 +104,7 @@ export function proceso(contadores) {
         // PROCESADOR
         contadores.CPU++;
         const u3 = congruencialMixto();
-        if (u3 <= 0.01) {
+        if (u3 <= PROB_REACONDICIONAMIENTO) {
           contadores.CCPURA++;
           contadores.ERA++;
           const T = Uniforme(10, 20);
@@ -110,7 +112,7 @@ export function proceso(contadores) {
         } else {
           contadores.CCPUR++;
           contadores.ER++;
-          const T = Uniforme(3, 6);
+          const T = Uniforme(5, 10);
           contadores.TR += T;
         }
  
@@ -118,15 +120,15 @@ export function proceso(contadores) {
         // GPU
         contadores.GPU++;
         const u3 = congruencialMixto();
-        if (u3 <= 0.01) {
+        if (u3 <= PROB_REACONDICIONAMIENTO) {
           contadores.CGPURA++;
           contadores.ERA++;
-          const T = Uniforme(15, 30);
+          const T = Uniforme(20, 40);
           contadores.TRA += T;
         } else {
           contadores.CGPUR++;
           contadores.ER++;
-          const T = Uniforme(3, 8);
+          const T = Uniforme(10, 20);
           contadores.TR += T;
         }
       }

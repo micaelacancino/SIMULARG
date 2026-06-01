@@ -2,10 +2,23 @@
 
 
 
- 
-  .colorFooter {
-    background-color: rgb(246, 246, 246);
-  }
+.footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 16px 20px;
+}
+
+.footer p {
+  width: 100%;
+  margin: 0;
+}
+
+.colorFooter {
+  background-color: rgb(246, 246, 246);
+}
   
   .logoSize {
     width: 25vh;

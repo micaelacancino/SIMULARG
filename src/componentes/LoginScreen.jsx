@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Btn from "./Btn";
+import { BsLock, BsPerson, BsRecycle } from "react-icons/bs";
 import { USUARIOS } from "../helpers/usuarios";
-import { C } from "../helpers/colores";
+import "../css/login.css";
 
 
 function LoginScreen({ onLogin }) {
@@ -12,11 +12,16 @@ function LoginScreen({ onLogin }) {
 
 
   function login() {
+    const uTrim = String(user).trim();
+    const pTrim = String(pass).trim();
+
+    if (!uTrim || !pTrim) {
+      setError("Ingresá usuario y contraseña.");
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
-      const uTrim = String(user).trim();
-      const pTrim = String(pass).trim();
-
       const found = USUARIOS.find(
         (u) => u.usuario === uTrim && u.clave === pTrim
       );
@@ -31,130 +36,78 @@ function LoginScreen({ onLogin }) {
 
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: `linear-gradient(135deg, ${C.verdeOsc} 0%, ${C.verde} 100%)`,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "'Segoe UI', system-ui, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          background: "#fff",
-          borderRadius: 20,
-          padding: "40px 44px",
-          width: 370,
-          boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
-        }}
-      >
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div
-            style={{
-              width: 62,
-              height: 62,
-              borderRadius: 16,
-              background: C.verde,
-              margin: "0 auto 12px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 28,
-            }}
-          >
-            ♻
+    <div className="login-screen">
+      <div className="login-card">
+        <div className="login-header">
+          <div className="login-logo">
+            <BsRecycle aria-hidden="true" />
           </div>
-          <div
-            style={{
-              fontSize: 24,
-              fontWeight: 800,
-              color: C.verde,
-              letterSpacing: -0.5,
-            }}
-          >
-            Reciclarg
+          <h1>SIMULARG</h1>
+          <p>Gestión y simulación de e-waste</p>
+        </div>
+
+
+        <div className="login-field">
+          <label>Usuario</label>
+          <div className={`login-input-wrap${error ? " error" : ""}`}>
+            <BsPerson aria-hidden="true" />
+            <input
+              type="text"
+              value={user}
+              placeholder="usuario"
+              onChange={(e) => {
+                setUser(e.target.value);
+                setError("");
+              }}
+              onKeyDown={(e) => e.key === "Enter" && login()}
+            />
           </div>
-          <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>
-            Inicia sesión para continuar
+        </div>
+
+        <div className="login-field">
+          <label>Contraseña</label>
+          <div className={`login-input-wrap${error ? " error" : ""}`}>
+            <BsLock aria-hidden="true" />
+            <input
+              type="password"
+              value={pass}
+              placeholder="••••••••"
+              onChange={(e) => {
+                setPass(e.target.value);
+                setError("");
+              }}
+              onKeyDown={(e) => e.key === "Enter" && login()}
+            />
           </div>
         </div>
 
 
-        {[["Usuario", "text", "usuario", user, setUser],
-          ["Contraseña", "password", "••••••••", pass, setPass]].map(
-          ([lbl, type, ph, val, set]) => (
-            <div key={lbl} style={{ marginBottom: 14 }}>
-              <label
-                style={{
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: C.gris,
-                  display: "block",
-                  marginBottom: 5,
-                }}
-              >
-                {lbl}
-              </label>
-              <input
-                type={type}
-                value={val}
-                placeholder={ph}
-                onChange={(e) => {
-                  set(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => e.key === "Enter" && login()}
-                style={{
-                  width: "100%",
-                  padding: "10px 13px",
-                  borderRadius: 8,
-                  fontSize: 14,
-                  border: `1.5px solid ${error ? C.rojo : C.borde}`,
-                  outline: "none",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-          )
-        )}
-
-
         {error && (
-          <div
-            style={{
-              fontSize: 13,
-              color: C.rojo,
-              marginBottom: 12,
-              textAlign: "center",
-            }}
-          >
+          <div className="login-error">
             {error}
           </div>
         )}
 
 
-        <Btn
+        <button
+          type="button"
+          className="login-button"
           onClick={login}
           disabled={loading}
-          style={{ width: "100%", padding: "11px" }}
         >
-          {loading ? "Verificando..." : "Iniciar sesión"}
-        </Btn>
+          {loading ? (
+            <>
+              <span className="login-spinner" aria-hidden="true"></span>
+              Verificando
+            </>
+          ) : (
+            "Iniciar sesión"
+          )}
+        </button>
 
 
-        <div
-          style={{
-            marginTop: 16,
-            padding: 11,
-            background: C.verdeSup,
-            borderRadius: 8,
-            fontSize: 12,
-            color: C.verde2,
-          }}
-        >
-          <strong>Demo:</strong> usuario <code>fnallim</code> · clave{" "}
+        <div className="login-access">
+          usuario <code>fnallim</code> · clave{" "}
           <code>reciclarg2026</code>
         </div>
       </div>

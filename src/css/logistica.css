@@ -88,6 +88,88 @@
   font-weight: bold;
 }
 
+.logistica-info {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.logistica-info div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid #DCE7E2;
+  border-radius: 10px;
+  background: #F8FAFC;
+}
+
+.logistica-info span {
+  color: #64748B;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.logistica-info strong {
+  color: #132b1f;
+  font-size: 0.9rem;
+}
+
+.mapa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.mapa-header h2 {
+  margin: 0;
+  color: #1E293B;
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.mapa-header p {
+  margin: 4px 0 0;
+  color: #64748B;
+  font-size: 0.9rem;
+}
+
+.mapa-zona-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #DCE7E2;
+  border-radius: 12px;
+  background: #F8FAFC;
+}
+
+.mapa-zona-toggle button {
+  min-width: 76px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #475569;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mapa-zona-toggle button:hover {
+  color: #132b1f;
+}
+
+.mapa-zona-toggle button.activo {
+  background: #51B9A0;
+  color: #0E1A14;
+  box-shadow: 0 6px 14px rgba(81, 185, 160, 0.26);
+}
+
 /* CAMPOS */
 
 .campo {
@@ -117,6 +199,31 @@
   background: #F8FAFC;
 }
 
+.mensaje-error {
+  color: #dc2626;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.spinner-simular {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  margin-right: 8px;
+  border: 2px solid rgba(14, 26, 20, 0.25);
+  border-top-color: #0E1A14;
+  border-radius: 50%;
+  vertical-align: -3px;
+  animation: girar 0.75s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 /* =========================
    BOTONES
@@ -134,13 +241,14 @@
 
   flex: 1;
 
-  padding: 12px;
+  padding: 11px 14px;
 
   border: none;
 
-  border-radius: 12px;
+  border-radius: 10px;
 
   font-weight: bold;
+  font-size: 0.95rem;
 
   cursor: pointer;
 
@@ -149,14 +257,19 @@
 
 .btn-simular {
 
-  background: #2FAE41;
+  background: #51B9A0 !important;
 
-  color: white;
+  color: black;
 }
 
 .btn-simular:hover {
 
-  background: #269637;
+  background: #65c844 !important;
+}
+
+.btn-simular:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .btn-salir {
@@ -299,6 +412,153 @@
   background: #EF4444;
 }
 
+.resultados-container {
+  width: min(1400px, calc(100% - 60px));
+  margin: 0 auto 36px;
+}
+
+.estado-logistica {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 28px;
+  border: 1px dashed rgba(81, 185, 160, 0.45);
+  border-radius: 14px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.estado-logistica h3 {
+  margin: 0 0 8px;
+  color: #1E293B;
+  font-weight: 800;
+}
+
+.estado-logistica p {
+  max-width: 460px;
+  margin: 0;
+  color: #64748B;
+}
+
+.estado-logistica-icono {
+  width: 62px;
+  height: 62px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  border-radius: 16px;
+  background: rgba(81, 185, 160, 0.12);
+  color: #51B9A0;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.loader-logistica {
+  width: 54px;
+  height: 54px;
+  margin-bottom: 18px;
+  border: 4px solid rgba(81, 185, 160, 0.2);
+  border-top-color: #51B9A0;
+  border-radius: 50%;
+  animation: girar 0.8s linear infinite;
+}
+
+.resumen-logistica {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.resumen-logistica > div {
+  padding: 16px;
+  border: 1px solid #DCE7E2;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.resumen-logistica span {
+  display: block;
+  margin-bottom: 8px;
+  color: #64748B;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.resumen-logistica strong {
+  color: #132b1f;
+  font-size: 1.2rem;
+}
+
+.resumen-logistica-zonas {
+  grid-template-columns: 180px repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.resumen-dias {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.resumen-zona-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.resumen-zona-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.resumen-zona-header span {
+  margin: 0;
+  color: #132b1f;
+  font-size: 1rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.resumen-zona-header strong {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(81, 185, 160, 0.14);
+  color: #287C69;
+  font-size: 0.76rem;
+}
+
+.resumen-zona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.resumen-zona-grid div {
+  padding: 10px;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  background: #F8FAFC;
+}
+
+.resumen-zona-grid span {
+  margin-bottom: 6px;
+  font-size: 0.68rem;
+}
+
+.resumen-zona-grid strong {
+  font-size: 0.95rem;
+}
+
 .tablas-zona {
   display: flex;
   gap: 24px;
@@ -308,23 +568,55 @@
 
 .tabla-wrapper {
   flex: 1;
-  min-width: 280px;
+  min-width: 360px;
   max-width: 48%;  /* ← cada tabla ocupa máximo la mitad */
+  overflow: hidden;
+  border: 1px solid #DCE7E2;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.tabla-wrapper h5 {
+  margin: 0;
+  padding: 12px 16px;
+  background: #132b1f;
+  color: #E8EDE8;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .tabla-wrapper table {
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   width: 100%;
+  min-width: 620px;
   table-layout: fixed;  /* ← columnas de ancho fijo */
+  margin: 0;
+  border-collapse: collapse;
 }
 
 .tabla-wrapper th,
 .tabla-wrapper td {
-  padding: 3px 4px !important;
-  font-size: 0.72rem;
+  padding: 10px 8px !important;
+  border-color: #E5E7EB !important;
+  color: #1E293B;
+  font-size: 0.78rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tabla-wrapper th {
+  background: #F4F8F6 !important;
+  color: #334155;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.tabla-wrapper tbody tr:hover {
+  background: #F8FAFC;
 }
 /* =========================
    RESPONSIVE
@@ -342,12 +634,45 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .resumen-logistica {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .resumen-logistica-zonas {
+    grid-template-columns: 1fr;
+  }
+
 }
 
 @media (max-width: 600px) {
 
   .cards-grid {
 
+    grid-template-columns: 1fr;
+  }
+
+  .resultados-container {
+    width: calc(100% - 32px);
+  }
+
+  .mapa-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mapa-zona-toggle {
+    width: 100%;
+  }
+
+  .mapa-zona-toggle button {
+    flex: 1;
+  }
+
+  .resumen-logistica {
+    grid-template-columns: 1fr;
+  }
+
+  .resumen-zona-grid {
     grid-template-columns: 1fr;
   }
 
