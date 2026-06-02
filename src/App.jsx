@@ -9,24 +9,10 @@ import SobreNosotros from "./componentes/SobreNosotros";
 
 import { useState } from "react";
 
-
-
-
-
-
-
-
-// Importá tus páginas
 import Home from "./componentes/Home";
 
-
-// MapaPuntos import removed (unused)
-
-
-
-
 function App() {
-   console.log("App renderizando");
+  console.log("App renderizando");
   const [usuarioLogueado, setUsuarioLogueado] = useState(() => {
     const guardado = localStorage.getItem("usuario");
     return guardado ? JSON.parse(guardado) : null;
@@ -68,30 +54,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
