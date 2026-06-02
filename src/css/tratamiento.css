@@ -697,6 +697,40 @@
   padding: 10px 2px 2px;
 }
 
+.grafico-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 4px;
+}
+
+.grafico-kpis div {
+  padding: 10px 12px;
+  border: 1px solid #DCE7E2;
+  border-radius: 10px;
+  background: rgba(248, 250, 252, 0.86);
+}
+
+.grafico-kpis span {
+  display: block;
+  margin-bottom: 4px;
+  color: #64748B;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.grafico-kpis strong {
+  display: block;
+  color: #10291F;
+  font-size: 1rem;
+  font-weight: 850;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .grafico-tratamiento-leyenda div {
   border-color: #DCE7E2;
   background: #FFFFFF;
@@ -791,6 +825,11 @@
 
   .grafico-tratamiento-leyenda {
     width: 100%;
+  }
+
+  .grafico-kpis {
+    width: 100%;
+    grid-template-columns: 1fr;
   }
 
   .grafico-tratamiento-barras {

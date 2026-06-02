@@ -47,7 +47,7 @@ function generarCandidato() {
 }
 
 // Prueba K-S sobre una muestra dada
-function pasaKS(muestra, alpha = 0.05) {
+function pasaKS(muestra) {
   const n = muestra.length;
   if (n < 2) return true; // con menos de 2 no se puede evaluar
 
@@ -71,7 +71,7 @@ export function congruencialMixto() {
   let candidato;
   let intentos = 0;
 
-  do {
+  while (intentos < MAX_INTENTOS) {
     candidato = generarCandidato();
     intentos++;
 
@@ -96,5 +96,5 @@ export function congruencialMixto() {
       return candidato;
     }
 
-  } while (true);
+  }
 }

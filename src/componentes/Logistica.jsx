@@ -42,14 +42,31 @@ function Logistica() {
   );
 
   const handleDiasAMostrar = (e) => {
-    if (e.target.value === "") {
+    const { value } = e.target;
+
+    if (value === "") {
       setDiasAMostrar("");
       setErrorDias("");
       return;
     }
 
-    const valor = Number(e.target.value);
-    setDiasAMostrar(Math.min(Math.max(valor, 1), DIAS_SIMULACION));
+    if (!/^\d+$/.test(value)) {
+      return;
+    }
+
+    if (value.length > 2) {
+      setErrorDias(`El máximo permitido es ${DIAS_SIMULACION} días.`);
+      return;
+    }
+
+    const valor = Number(value);
+
+    if (valor > DIAS_SIMULACION) {
+      setErrorDias(`El máximo permitido es ${DIAS_SIMULACION} días.`);
+      return;
+    }
+
+    setDiasAMostrar(value);
     setErrorDias("");
   };
 

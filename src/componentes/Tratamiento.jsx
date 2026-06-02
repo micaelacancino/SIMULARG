@@ -90,8 +90,8 @@ function Tratamiento() {
       setError("La cantidad de empleados disponibles debe ser al menos 1.");
       return;
     }
-    if (Number(empleadosDisponibles) > 150) {
-      setError("La cantidad de empleados disponibles no puede superar 150.");
+    if (Number(empleadosDisponibles) > 30) {
+      setError("La cantidad de empleados disponibles no puede superar 30.");
       return;
     }
     if (sumaActual > total) {
@@ -202,8 +202,8 @@ function Tratamiento() {
       setError("La cantidad de empleados disponibles debe ser al menos 1.");
       return false;
     }
-    if (Number(empleadosDisponibles) > 150) {
-      setError("La cantidad de empleados disponibles no puede superar 150.");
+    if (Number(empleadosDisponibles) > 30) {
+      setError("La cantidad de empleados disponibles no puede superar 30.");
       return false;
     }
 
@@ -269,7 +269,7 @@ function Tratamiento() {
                 value={empleadosDisponibles}
                 onChange={handleEmpleadosChange}
                 min="1"
-                max="150"
+                max="30"
                 placeholder="Ej: 8"
               />
             </div>
@@ -565,8 +565,8 @@ function Tratamiento() {
       return;
     }
 
-    if (Number(value) > 150) {
-      setError("La cantidad de empleados disponibles no puede superar 150.");
+    if (Number(value) > 30) {
+      setError("La cantidad de empleados disponibles no puede superar 30.");
       return;
     }
 
@@ -583,8 +583,8 @@ function Tratamiento() {
       setError("La cantidad de empleados disponibles debe ser al menos 1.");
       return;
     }
-    if (Number(empleadosDisponibles) > 150) {
-      setError("La cantidad de empleados disponibles no puede superar 150.");
+    if (Number(empleadosDisponibles) > 30) {
+      setError("La cantidad de empleados disponibles no puede superar 30.");
       return;
     }
 
@@ -794,7 +794,7 @@ function Tratamiento() {
                 value={empleadosDisponibles}
                 onChange={handleEmpleadosChange}
                 min="1"
-                max="150"
+                max="30"
                 placeholder="Ej: 8"
               />
             </div>
@@ -977,6 +977,7 @@ function Tratamiento() {
 }
 
 export default Tratamiento;
+
 
 
 

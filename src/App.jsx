@@ -12,7 +12,6 @@ import { useState } from "react";
 import Home from "./componentes/Home";
 
 function App() {
-  console.log("App renderizando");
   const [usuarioLogueado, setUsuarioLogueado] = useState(() => {
     const guardado = localStorage.getItem("usuario");
     return guardado ? JSON.parse(guardado) : null;

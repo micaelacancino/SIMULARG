@@ -33,6 +33,7 @@ function GraficoTratamiento({ resultado, labels }) {
     GPU: "GPU",
   };
   const tiemposPorEquipo = equipos.map((key) => Number(detalle[key].tiempoTotal.toFixed(1)));
+  const tiempoMayorEquipo = Math.max(...tiemposPorEquipo);
 
   const equipoMayorTiempo = equipos.reduce(
     (mayor, key) =>
@@ -69,6 +70,17 @@ function GraficoTratamiento({ resultado, labels }) {
             <p>Distribucion del destino final de los equipos procesados.</p>
           </div>
           <span>{totalDestino} equipos</span>
+        </div>
+
+        <div className="grafico-kpis">
+          <div>
+            <span>Total reciclados</span>
+            <strong>{totalReciclados}</strong>
+          </div>
+          <div>
+            <span>Total reacondicionados</span>
+            <strong>{totalReacondicionados}</strong>
+          </div>
         </div>
 
         <div className="grafico-tratamiento-contenido">
@@ -116,6 +128,17 @@ function GraficoTratamiento({ resultado, labels }) {
             <p>Comparacion de la carga de trabajo acumulada por categoria.</p>
           </div>
           <span>{labels[equipoMayorTiempo]}</span>
+        </div>
+
+        <div className="grafico-kpis">
+          <div>
+            <span>Mayor carga</span>
+            <strong>{labels[equipoMayorTiempo]}</strong>
+          </div>
+          <div>
+            <span>Tiempo acumulado</span>
+            <strong>{tiempoMayorEquipo.toFixed(1)} min</strong>
+          </div>
         </div>
 
         <div className="grafico-tratamiento-barras">
