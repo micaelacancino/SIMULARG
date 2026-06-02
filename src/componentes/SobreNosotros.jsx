@@ -3,7 +3,7 @@ import { BsGeoAlt, BsRecycle, BsSearch, BsTree } from "react-icons/bs";
 import "../css/nosotros.css";
 
 const VALORES = [
-  { Icon: BsTree, titulo:"Sostenibilidad", desc:"Cada kg de e-waste que gestionamos es una reducción directa en la contaminación del suelo y napas de Mendoza." },
+  { Icon: BsTree, titulo:"Sostenibilidad", desc:"Cada kg de e-waste que gestionamos es una reducción directa en la contaminación del suelo y mapas de Mendoza." },
   { Icon: BsSearch, titulo:"Rigor científico", desc:"Usamos modelos estocásticos reales: distribuciones uniformes, Poisson y exponencial para simular la operación." },
   { Icon: BsRecycle, titulo:"Economía circular", desc:"El 93% de los equipos que recibimos encuentra una segunda vida, ya sea como material reciclado o equipo reacondicionado." },
   { Icon: BsGeoAlt, titulo:"Enfoque local", desc:"Operamos en Mendoza, conocemos sus zonas, sus rutas y sus condiciones climáticas adversas que afectan la logística." },
