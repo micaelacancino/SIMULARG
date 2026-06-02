@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="footer mt-5">
       <p className="text-center border-none montserrat my-0 mt-2">
-        &copy; 2024. Todos los derechos reservados
+        &copy; 2026. Todos los derechos reservados
       </p>
     </footer>
   );

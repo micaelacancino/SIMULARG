@@ -40,7 +40,7 @@ const PASOS = [
   { n:"01", titulo:"Recolección", desc:"Retiramos equipos desde puntos limpios habilitados en Mendoza." },
   { n:"02", titulo:"Clasificación", desc:"Separamos notebooks, PCs y componentes por tipo y estado." },
   { n:"03", titulo:"Evaluación", desc:"El 93% apto para tratamiento; el 7% restante va a disposición final." },
-  { n:"04", titulo:"Tratamiento", desc:"Reciclaje (99%) o reacondicionamiento (1%) según posibilidades." },
+  { n:"04", titulo:"Tratamiento", desc:"Reciclaje (98%) o reacondicionamiento (2%) según posibilidades." },
   { n:"05", titulo:"Reporte", desc:"Generamos métricas diarias: tiempos, empleados necesarios y proyección." },
 ];
 
@@ -407,7 +407,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-)   
+   
     </>);}
 
     
