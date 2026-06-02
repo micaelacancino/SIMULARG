@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import "../css/logistica.css";
+import Grafico from "./Grafico";
 import MapaPuntos from "./MapaPuntos";
 import { Simulador } from "../simulador/simulador.js";
 import { IniciarGenerador } from "../simulador/Generadores.js";
@@ -252,6 +253,8 @@ function Logistica() {
               </div>
             </div>
           </div>
+
+          <Grafico resultados={resultadosFiltrados} />
 
           <div className="tablas-zona">
 

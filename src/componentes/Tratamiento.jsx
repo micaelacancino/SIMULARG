@@ -13,6 +13,7 @@ function Tratamiento() {
   const [error, setError] = useState("");
   const [resultado, setResultado] = useState(null);
   const [simulando, setSimulando] = useState(false);
+  const [vistaResultado, setVistaResultado] = useState("detalle");
 
   const labels = {
     N: "Notebooks", PC: "PCs completas", F: "Fuentes",
@@ -191,6 +192,51 @@ function Tratamiento() {
       ? { msg: `✅ La cantidad de empleados es suficiente (necesarios: ${resultado.CEMP}, disponibles: ${resultado.empleadosDisponibles}).`, color: "#16a34a" }
       : { msg: `⚠️ Se necesitan ${resultado.CEMP} empleados pero solo hay ${resultado.empleadosDisponibles} disponibles. Faltan ${resultado.CEMP - resultado.empleadosDisponibles}.`, color: "#dc2626" }
     : null;
+
+  const validarAntesDeSimular = () => {
+    if (empleadosDisponibles === "") {
+      setError("Ingresa la cantidad de empleados disponibles.");
+      return false;
+    }
+    if (Number(empleadosDisponibles) < 1) {
+      setError("La cantidad de empleados disponibles debe ser al menos 1.");
+      return false;
+    }
+    if (Number(empleadosDisponibles) > 150) {
+      setError("La cantidad de empleados disponibles no puede superar 150.");
+      return false;
+    }
+
+    if (modo === "total") {
+      const total = Number(totalRecibidos);
+      if (totalRecibidos === "") {
+        setError("Ingresa la cantidad de equipos recibidos hoy.");
+        return false;
+      }
+      if (total < 1) {
+        setError("La cantidad de equipos recibidos debe ser al menos 1.");
+        return false;
+      }
+      if (total > 250) {
+        setError("La cantidad de equipos recibidos no puede superar 250.");
+        return false;
+      }
+    }
+
+    if (modo === "clasificacion") {
+      if (sumaActual === 0) {
+        setError("Ingresa al menos un equipo para calcular.");
+        return false;
+      }
+      if (sumaActual > 250) {
+        setError("La suma de equipos no puede superar 250.");
+        return false;
+      }
+    }
+
+    setError("");
+    return true;
+  };
 
   return (
     <div className="tratamiento-container">
@@ -391,11 +437,23 @@ function Tratamiento() {
               </div>
               <h2>Resultados de la simulación</h2>
               <p>Completá los equipos recibidos y presioná Calcular.</p>
-              <ul>
-                <li>Equipos reciclados</li>
-                <li>Equipos reacondicionados</li>
-                <li>Tiempos y empleados necesarios</li>
-              </ul>
+              <div className="resultado-preview-grid">
+                <div>
+                  <strong>01</strong>
+                  <span>Destino de equipos</span>
+                  <p>Reciclaje y reacondicionamiento.</p>
+                </div>
+                <div>
+                  <strong>02</strong>
+                  <span>Tiempos de proceso</span>
+                  <p>Promedios y totales por tipo.</p>
+                </div>
+                <div>
+                  <strong>03</strong>
+                  <span>Capacidad diaria</span>
+                  <p>Empleados necesarios y pendientes.</p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -415,6 +473,7 @@ export default Tratamiento;
 import { useState } from "react";
 import { BsClipboardData } from "react-icons/bs";
 import "../css/tratamiento.css";
+import GraficoTratamiento from "./GraficoTratamiento";
 import { IniciarGenerador, congruencialMixto } from "../simulador/Generadores.js";
 import { proceso } from "../simulador/proceso.js";
 
@@ -448,27 +507,70 @@ function Tratamiento() {
 
   const handleTotalChange = (e) => {
     const { value } = e.target;
-    if (value === "" || /^\d+$/.test(value)) {
-      setTotalRecibidos(value);
+
+    if (value === "") {
+      setTotalRecibidos("");
+      setError("");
+      setResultado(null);
+      return;
     }
+
+    if (!/^\d+$/.test(value) || value.length > 3) {
+      return;
+    }
+
+    if (Number(value) > 250) {
+      setError("La cantidad de equipos recibidos no puede superar 250.");
+      return;
+    }
+
+    setTotalRecibidos(value);
     setError("");
     setResultado(null);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (value !== "" && !/^\d+$/.test(value)) {
+    if (value === "") {
+      setError("");
+      setEquipos((prev) => ({ ...prev, [name]: "" }));
       return;
     }
+
+    if (!/^\d+$/.test(value) || value.length > 3) {
+      return;
+    }
+
+    const nuevaSuma = sumaActual - Number(equipos[name] || 0) + Number(value);
+
+    if (nuevaSuma > 250) {
+      setError("La suma de equipos no puede superar 250.");
+      return;
+    }
+
     setError("");
     setEquipos((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleEmpleadosChange = (e) => {
     const { value } = e.target;
-    if (value === "" || /^\d+$/.test(value)) {
-      setEmpleadosDisponibles(value);
+
+    if (value === "") {
+      setEmpleadosDisponibles("");
+      setError("");
+      return;
     }
+
+    if (!/^\d+$/.test(value) || value.length > 3) {
+      return;
+    }
+
+    if (Number(value) > 150) {
+      setError("La cantidad de empleados disponibles no puede superar 150.");
+      return;
+    }
+
+    setEmpleadosDisponibles(value);
     setError("");
   };
 
@@ -629,8 +731,14 @@ function Tratamiento() {
 
   const estadoEmpleados = resultado
     ? resultado.empleadosDisponibles >= resultado.CEMP
-      ? { msg: `✅ La cantidad de empleados es suficiente (necesarios: ${resultado.CEMP}, disponibles: ${resultado.empleadosDisponibles})`, color: "#16a34a" }
-      : { msg: `⚠️ Se necesitan ${resultado.CEMP} empleados pero solo hay ${resultado.empleadosDisponibles} disponibles.`, color: "#dc2626" }
+      ? {
+          msg: `La cantidad de empleados es suficiente (necesarios: ${resultado.CEMP}, disponibles: ${resultado.empleadosDisponibles})`,
+          estado: "suficiente",
+        }
+      : {
+          msg: `Se necesitan ${resultado.CEMP} empleados pero solo hay ${resultado.empleadosDisponibles} disponibles.`,
+          estado: "insuficiente",
+        }
     : null;
 
   return (
@@ -833,18 +941,15 @@ function Tratamiento() {
                 <p><strong>Empleados necesarios:</strong> {resultado.CEMP}</p>
               </div>
 
-              <div style={{
-                marginTop: "12px", padding: "14px 18px", borderRadius: "12px",
-                background: estadoEmpleados.color === "#16a34a" ? "#f0fdf4" : "#fef2f2",
-                borderLeft: `4px solid ${estadoEmpleados.color}`,
-                color: estadoEmpleados.color, fontWeight: "600",
-              }}>
+              <div className={`estado-empleados ${estadoEmpleados.estado}`}>
                 {estadoEmpleados.msg}
               </div>
+
             </>
           ) : (
             <div className="estado-vacio-resultados">
               <div className="estado-vacio-icono"><BsClipboardData aria-hidden="true" /></div>
+              <span className="estado-vacio-etiqueta">Panel de salida</span>
               <h2>Resultados de la simulación</h2>
               <p>Elegí un modo de ingreso y presioná Simular.</p>
               <ul>
@@ -857,11 +962,22 @@ function Tratamiento() {
 
         </div>
       </div>
+
+      {resultado && !simulando && (
+        <div className="reportes-tratamiento-seccion">
+          <div className="reportes-tratamiento-titulo">
+            <h2>Reportes graficos</h2>
+            <p>Lectura visual de destinos y tiempos de tratamiento.</p>
+          </div>
+          <GraficoTratamiento resultado={resultado} labels={labels} />
+        </div>
+      )}
     </div>
   );
 }
 
 export default Tratamiento;
+
 
 
 
