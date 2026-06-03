@@ -5,7 +5,7 @@ import { Uniforme, Poisson } from "./Distribucion.js";
 
 
 
-IniciarGenerador(4122, 76);
+IniciarGenerador(4122, 2147483648);
 
 export async function Simulador(resultado, dias = 60) {
   let dia = 1;

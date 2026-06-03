@@ -72,7 +72,7 @@ function Logistica() {
 
   async function ejecutarSimulacion() {
     const semilla = Math.floor(Math.random() * 9000) + 1000;
-    IniciarGenerador(semilla, 76);
+    IniciarGenerador(semilla, 2147483648);
     const datos = [];
     await Simulador(datos, DIAS_SIMULACION);
     setResultados(datos);
