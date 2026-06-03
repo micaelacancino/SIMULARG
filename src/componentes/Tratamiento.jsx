@@ -715,8 +715,14 @@ function Tratamiento() {
     setSimulando(true);
     setResultado(null);
     setTimeout(() => {
-      ejecutarSimulacion();
-      setSimulando(false);
+      try {
+        ejecutarSimulacion();
+      } catch (errorSimulacion) {
+        console.error(errorSimulacion);
+        setError("No se pudo completar la simulacion. Intenta nuevamente.");
+      } finally {
+        setSimulando(false);
+      }
     }, 450);
   };
 

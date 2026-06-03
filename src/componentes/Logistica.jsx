@@ -90,14 +90,20 @@ function Logistica() {
     setResultados([]);
 
     setTimeout(async () => {
-      await ejecutarSimulacion();
-      setSimulando(false);
-      setTimeout(() => {
-        resultadosRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 80);
+      try {
+        await ejecutarSimulacion();
+        setTimeout(() => {
+          resultadosRef.current?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 80);
+      } catch (errorSimulacion) {
+        console.error(errorSimulacion);
+        setErrorDias("No se pudo completar la simulacion. Intenta nuevamente.");
+      } finally {
+        setSimulando(false);
+      }
     }, 450);
   }
 
