@@ -1,36 +1,34 @@
-
 import { congruencialMixto } from "./Generadores.js";
 import { Uniforme } from "./Distribucion.js";
 
 const PROB_REACONDICIONAMIENTO = 0.02;
 
 export function proceso(contadores) {
- 
   const u = congruencialMixto();
- 
-  if (u <= 0.93) { // 93% de los materiales son aptos para tratamiento
- 
+
+  if (u <= 0.93) {
+    // 93% de los materiales son aptos para tratamiento
+
     const u1 = congruencialMixto();
- 
+
     if (u1 <= 0.45) {
       // ── NOTEBOOK (45%) ──────────────────────────
       contadores.N++;
       const u9 = congruencialMixto();
       if (u9 <= PROB_REACONDICIONAMIENTO) {
         // reacondicionamiento
-        contadores.CNRA++;
-        contadores.ERA++;
+        contadores.CNRA++; // cantidad de notebooks reacondicionadas
+        contadores.ERA++; //cantidad de equipos reacondicionados
         const T = Uniforme(60, 120); // tiempo de reacondicionamiento
-        contadores.TRA += T;
+        contadores.TRA += T; // tiempo total de reacondicionamiento
       } else {
         // reciclaje
-        contadores.CNR++;
-        contadores.ER++;
+        contadores.CNR++; // cantidad de notebooks recicladas
+        contadores.ER++; // cantidad de equipos reciclados
         const T = Uniforme(30, 60); // tiempo de reciclaje
         contadores.TR += T;
       }
- 
-    } else if (u1 <= 0.80) {
+    } else if (u1 <= 0.8) {
       // ── PC COMPLETA (35%) ───────────────────────
       contadores.PC++;
       const u6 = congruencialMixto();
@@ -47,11 +45,10 @@ export function proceso(contadores) {
         const T = Uniforme(30, 60); // tiempo de reciclaje
         contadores.TR += T;
       }
- 
     } else {
       // ── COMPONENTE (20%) ────────────────────────
       const u2 = congruencialMixto();
- 
+
       if (u2 <= 0.35) {
         // FUENTE
         contadores.F++;
@@ -67,8 +64,7 @@ export function proceso(contadores) {
           const T = Uniforme(10, 20);
           contadores.TR += T;
         }
- 
-      } else if (u2 <= 0.60) {
+      } else if (u2 <= 0.6) {
         // MOTHERBOARD
         contadores.M++;
         const u3 = congruencialMixto();
@@ -83,8 +79,7 @@ export function proceso(contadores) {
           const T = Uniforme(15, 25);
           contadores.TR += T;
         }
- 
-      } else if (u2 <= 0.80) {
+      } else if (u2 <= 0.8) {
         // RAM
         contadores.R++;
         const u3 = congruencialMixto();
@@ -99,7 +94,6 @@ export function proceso(contadores) {
           const T = Uniforme(5, 12);
           contadores.TR += T;
         }
- 
       } else if (u2 <= 0.95) {
         // PROCESADOR
         contadores.CPU++;
@@ -115,7 +109,6 @@ export function proceso(contadores) {
           const T = Uniforme(5, 10);
           contadores.TR += T;
         }
- 
       } else {
         // GPU
         contadores.GPU++;
@@ -134,5 +127,4 @@ export function proceso(contadores) {
       }
     }
   }
-
 }

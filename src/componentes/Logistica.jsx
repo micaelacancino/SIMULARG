@@ -21,6 +21,9 @@ function Logistica() {
     setSimulando(false);
   };
   const cantidadDiasAMostrar = diasAMostrar === "" ? DIAS_SIMULACION : Number(diasAMostrar);
+  const diasFueraDeRango =
+    diasAMostrar !== "" &&
+    (Number(diasAMostrar) < 1 || Number(diasAMostrar) > DIAS_SIMULACION);
   const resultadosFiltrados = resultados.slice(0, cantidadDiasAMostrar);
   const resumen = resultadosFiltrados.reduce(
     (acc, r) => ({
@@ -61,6 +64,12 @@ function Logistica() {
 
     const valor = Number(value);
 
+    if (valor < 1) {
+      setDiasAMostrar(value);
+      setErrorDias(`Ingresa un valor entre 1 y ${DIAS_SIMULACION} dias.`);
+      return;
+    }
+
     if (valor > DIAS_SIMULACION) {
       setErrorDias(`El máximo permitido es ${DIAS_SIMULACION} días.`);
       return;
@@ -83,6 +92,14 @@ function Logistica() {
     if (diasAMostrar === "") {
       setResultados([]);
       setErrorDias("Ingresá la cantidad de días que querés visualizar.");
+      return;
+    }
+
+    const diasSeleccionados = Number(diasAMostrar);
+
+    if (diasSeleccionados < 1 || diasSeleccionados > DIAS_SIMULACION) {
+      setResultados([]);
+      setErrorDias(`Ingresa un valor entre 1 y ${DIAS_SIMULACION} dias.`);
       return;
     }
 
@@ -154,7 +171,7 @@ function Logistica() {
 
             {/* BOTONES */}
             <div className="botones">
-              <button className="btn-simular" onClick={handleSimular} disabled={simulando}>
+              <button className="btn-simular" onClick={handleSimular} disabled={simulando || diasFueraDeRango}>
                 {simulando ? (
                   <>
                     <span className="spinner-simular" aria-hidden="true"></span>

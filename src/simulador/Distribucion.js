@@ -1,8 +1,6 @@
 // ─────────────────────────────────────────────
 //  Distribuciones.js
 //  Funciones de distribuciones estadísticas
-//  Usan lehmer() como fuente de aleatoriedad
-// ─────────────────────────────────────────────
 
 import { congruencialMixto } from "../simulador/Generadores.js";
 
