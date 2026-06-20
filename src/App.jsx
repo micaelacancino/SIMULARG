@@ -13,8 +13,13 @@ import Home from "./componentes/Home";
 
 function App() {
   const [usuarioLogueado, setUsuarioLogueado] = useState(() => {
-    const guardado = localStorage.getItem("usuario");
-    return guardado ? JSON.parse(guardado) : null;
+    try {
+      const guardado = localStorage.getItem("usuario");
+      return guardado ? JSON.parse(guardado) : null;
+    } catch {
+      localStorage.removeItem("usuario");
+      return null;
+    }
   });
 
   function handleLogin(usuario) {

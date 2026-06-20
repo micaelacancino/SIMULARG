@@ -690,16 +690,16 @@ function Tratamiento() {
       };
     });
 
-    const totalEquipos = Object.values(clasificacionFinal).reduce((a, b) => a + b, 0);
-    const TT = Object.values(detalle).reduce((a, b) => a + b.tiempoTotal, 0);
-    const HH = TT / 60;
-    const empleados = Number(empleadosDisponibles);
-    const jornadaMin = empleados * 8 * 60;
-    const CEMP = Math.ceil(HH / 8);
+    const totalEquipos = Object.values(clasificacionFinal).reduce((a, b) => a + b, 0); //Suma todos los equipos/componentes que se van a procesar.
+    const TT = Object.values(detalle).reduce((a, b) => a + b.tiempoTotal, 0); //Es el tiempo total en minutos para procesar todos los equipos. Suma el tiempo de reciclaje y reacondicionamiento de cada tipo.
+    const HH = TT / 60; //Convierte ese tiempo total a horas: divide el total de minutos por 60 para obtener el tiempo en horas.
+    const empleados = Number(empleadosDisponibles); //
+    const jornadaMin = empleados * 8 * 60; //Calcula cuántos empleados se necesitan, suponiendo jornadas de 8 horas:
+    const CEMP = Math.ceil(HH / 8); //Calcula la cantidad de empleados necesarios para procesar todo en un día. Divide el tiempo total en horas por 8 (horas de una jornada) y redondea hacia arriba.
 
-    const minPorEquipo = TT / totalEquipos;
-    const equiposProcesados = Math.min(totalEquipos, Math.floor(jornadaMin / minPorEquipo));
-    const equiposPendientes = totalEquipos - equiposProcesados;
+    const minPorEquipo = TT / totalEquipos; //Calcula el tiempo promedio por equipo dividiendo el tiempo total entre la cantidad total de equipos. Esto da una estimación de cuánto tiempo se tarda en procesar cada equipo en promedio.
+    const equiposProcesados = Math.min(totalEquipos, Math.floor(jornadaMin / minPorEquipo)); //Calcula cuántos equipos se pueden procesar en la jornada laboral disponible. Divide el total de minutos disponibles en la jornada (jornadaMin) por el tiempo promedio por equipo (minPorEquipo) para obtener una estimación de cuántos equipos se pueden procesar. Luego, toma el mínimo entre esa cantidad y el total de equipos para asegurarse de no exceder la cantidad real de equipos.
+    const equiposPendientes = totalEquipos - equiposProcesados; //Calcula cuántos equipos quedarían pendientes para el día siguiente restando la cantidad de equipos procesados del total de equipos.
 
     setResultado({
       detalle, TT, HH, CEMP,
