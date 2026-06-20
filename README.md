@@ -25,3 +25,31 @@ SIMULARG es una aplicación web para simular procesos de logística y tratamient
 - React Leaflet
 - MUI X Charts
 - Netlify
+
+## Deploy
+
+El proyecto está configurado para ser desplegado en Netlify.
+
+
+## Usuario de acceso
+
+Credenciales disponibles para ingresar al sistema:
+
+```txt
+Usuario: fnallim
+Clave: reciclarg2026
+
+## Estructura principal
+## Organización general del proyecto:
+
+src/
+  componentes/
+  css/
+  helpers/
+  simulador/
+## Carpetas principales
+
+componentes: contiene las vistas y componentes reutilizables de la aplicación.
+css: contiene los estilos visuales de cada sección.
+helpers: contiene datos auxiliares utilizados por la aplicación.
+simulador: contiene la lógica de simulación.
